@@ -8,7 +8,7 @@ class Terminal:
         self.root = tk.Tk()
         self.root.title("Terminal")
         self.root.pack_propagate(0)
-        self.root.geometry("800x700")
+        self.root.geometry("1000x1000")
         self.root.minsize(800, 700)
         self.root.maxsize(800, 700)
 
