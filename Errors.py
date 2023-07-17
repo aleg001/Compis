@@ -8,7 +8,8 @@ class CustomErrorListener(ErrorListener):
         self.errors = []
 
     def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
-        if "exit" in msg:
+        if "exit" in msg or "cls" in msg or "clear" in msg:
             return
+
         else:
             self.errors.append(f"line {line}:{column} {msg}")
