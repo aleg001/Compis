@@ -5,6 +5,8 @@ from antlr4 import *
 from yaplLexer import yaplLexer
 from yaplParser import yaplParser
 from antlr4.tree.Trees import Trees
+from Errors import CustomErrorListener
+import tkinter.messagebox as messagebox
 
 
 class Terminal:
@@ -57,23 +59,47 @@ class Terminal:
         self.shell_started = False
         self.first_terminal_shell = True
         self.command_counter = 0
+
+        self.input_stream = None
+        self.error_listener = CustomErrorListener()
+        self.lexer = yaplLexer(self.input_stream)
+        self.lexer.removeErrorListeners()
+        self.lexer.addErrorListener(self.error_listener)
+
+        self.token_stream = CommonTokenStream(self.lexer)
+        self.parser = yaplParser(self.token_stream)
+        self.parser.removeErrorListeners()
+        self.parser.addErrorListener(self.error_listener)
+
         self.root.mainloop()
 
     def parse_and_execute(self, input_text):
-        input_stream = InputStream(input_text)
+        self.input_stream = InputStream(input_text)
 
-        lexer = yaplLexer(input_stream)
-        token_stream = CommonTokenStream(lexer)
+        self.lexer = yaplLexer(self.input_stream)
+        self.lexer.removeErrorListeners()
+        self.lexer.addErrorListener(self.error_listener)
 
-        parser = yaplParser(token_stream)
+        self.token_stream = CommonTokenStream(self.lexer)
 
-        tree = parser.expr()
+        self.parser = yaplParser(self.token_stream)
+        self.parser.removeErrorListeners()
+        self.parser.addErrorListener(self.error_listener)
 
-        if parser.getNumberOfSyntaxErrors() == 0:
-            tree_str = Trees.toStringTree(tree, None, parser)
+        self.error_listener.errors = []
+
+        tree = self.parser.expr()
+
+        if self.parser.getNumberOfSyntaxErrors() == 0:
+            tree_str = Trees.toStringTree(tree, None, self.parser)
             self.Execute(f"Syntax Tree: {tree_str}")
         else:
-            self.Execute("La entrada contiene errores de sintaxis.")
+            error_messages = "\\n".join(self.error_listener.errors)
+            if error_messages:
+                messagebox.showerror("Syntax Errors", error_messages)
+
+            else:
+                self.Execute("Syntax Errors but no error messages captured.")
 
     def init_message(self):
         self.result_text.configure(state="normal")
@@ -115,6 +141,7 @@ class Terminal:
                 self.result_text.configure(state="normal")
                 self.result_text.insert("end", f"Input> use 'start' to start\n")
                 self.result_text.configure(state="disabled")
+                self.parse_and_execute(input_text)
             return
         self.parse_and_execute(input_text)
         if input_text.lower() == "help":
@@ -127,7 +154,7 @@ class Terminal:
             self.command_counter = 0
         elif input_text.lower() == "help":
             self.show_help()
-        elif input_text.lower() == "exit":
+        elif input_text.lower().startswith("exit"):
             self.root.destroy()
 
         else:
