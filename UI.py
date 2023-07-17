@@ -25,10 +25,13 @@ class Terminal:
         self.style.configure(
             "TButton", foreground="white", background="#007bff", font=("Arial", 12)
         )
-        self.text_box = ttk.Entry(self.root, width=50, style="TEntry")
-        self.text_box.pack(padx=20, pady=20)
 
+        self.text_box = tk.Text(
+            self.root, wrap="word", width=50, height=5, font=("Arial", 12)
+        )
+        self.text_box.pack(padx=20, pady=20)
         self.text_box.bind("<Return>", self.run_command)
+        self.text_box.bind("<Shift-Return>", self.insert_newline)
 
         self.result_text = tk.Text(
             self.root,
@@ -40,8 +43,7 @@ class Terminal:
         )
         self.result_text.pack(expand=True, fill="both", padx=20, pady=20)
         self.result_text.configure(state="disabled")
-        self.text_box.pack(padx=20, pady=20)
-        self.text_box.bind("<Return>", self.run_command)
+
         self.text_box.bind("<KeyRelease>", self.autocomplete)
         self.text_box.bind("<Tab>", self.tab_complete)
         self.tab_pressed = False
@@ -49,7 +51,7 @@ class Terminal:
         self.suggestion_label.place(x=20, y=70)
         self.current_autocomplete = None
         self.shell_started = False
-        self.first_hbase_shell = True
+        self.first_terminal_shell = True
         self.command_counter = 0
         self.root.mainloop()
 
@@ -60,19 +62,30 @@ class Terminal:
             'Escribe "exit<RETURN>" para salir\n',
         )
 
+    def insert_newline(self, event=None):
+        if event.state & 0x1:
+            self.text_box.insert("insert", "\n")
+            return "break"
+        else:
+            self.run_command(event)
+
     def show_help(self):
         help_text = ""
         for command in commands:
             help_text += f"{command}\n"
         return help_text
 
+    def insert_newline(self, event=None):
+        self.text_box.insert("insert", "\n")
+        return "break"
+
     def run_command(self, event=None):
-        input_text = self.text_box.get().strip()
-        self.text_box.delete(0, "end")
+        input_text = self.text_box.get("1.0", "end-1c").strip()
+        self.text_box.delete("1.0", "end")
         if not self.shell_started:
-            if input_text.lower() == "start" and self.first_hbase_shell:
+            if input_text.lower() == "start" and self.first_terminal_shell:
                 self.shell_started = True
-                self.first_hbase_shell = False
+                self.first_terminal_shell = False
                 self.result_text.configure(state="normal")
                 self.result_text.delete("1.0", "end")
                 self.result_text.insert("end", f"Input> {input_text}\n")
@@ -139,7 +152,9 @@ class Terminal:
     def autocomplete(self, event=None):
         if event.keysym != "Tab":
             self.tab_pressed = False
-            input_text = self.text_box.get().strip().lower()
+
+            input_text = self.text_box.get("1.0", "end-1c").strip()
+
             if (
                 len(input_text) >= 3
                 and not self.tab_pressed
