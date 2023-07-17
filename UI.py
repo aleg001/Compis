@@ -1,6 +1,10 @@
 import tkinter as tk
 from tkinter import ttk
 from Constants import *
+from antlr4 import *
+from yaplLexer import yaplLexer
+from yaplParser import yaplParser
+from antlr4.tree.Trees import Trees
 
 
 class Terminal:
@@ -55,6 +59,22 @@ class Terminal:
         self.command_counter = 0
         self.root.mainloop()
 
+    def parse_and_execute(self, input_text):
+        input_stream = InputStream(input_text)
+
+        lexer = yaplLexer(input_stream)
+        token_stream = CommonTokenStream(lexer)
+
+        parser = yaplParser(token_stream)
+
+        tree = parser.expr()
+
+        if parser.getNumberOfSyntaxErrors() == 0:
+            tree_str = Trees.toStringTree(tree, None, parser)
+            self.Execute(f"Syntax Tree: {tree_str}")
+        else:
+            self.Execute("La entrada contiene errores de sintaxis.")
+
     def init_message(self):
         self.result_text.configure(state="normal")
         self.result_text.insert(
@@ -96,6 +116,7 @@ class Terminal:
                 self.result_text.insert("end", f"Input> use 'start' to start\n")
                 self.result_text.configure(state="disabled")
             return
+        self.parse_and_execute(input_text)
         if input_text.lower() == "help":
             self.Execute(self.show_help())
             return
@@ -186,4 +207,4 @@ class Terminal:
             return "break"
 
 
-# Terminal()
+Terminal()
