@@ -8,7 +8,7 @@ class Terminal:
         self.root = tk.Tk()
         self.root.title("Terminal")
         self.root.pack_propagate(0)
-        self.root.geometry("1000x1000")
+        self.root.geometry("3000x3000")
         self.root.minsize(800, 700)
         self.root.maxsize(800, 700)
 
@@ -27,7 +27,7 @@ class Terminal:
         )
 
         self.text_box = tk.Text(
-            self.root, wrap="word", width=50, height=5, font=("Arial", 12)
+            self.root, wrap="word", width=50, height=5, font=("Arial", 12), bg="black"
         )
         self.text_box.pack(padx=20, pady=20)
         self.text_box.bind("<Return>", self.run_command)

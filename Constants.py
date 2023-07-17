@@ -10,7 +10,7 @@ themes = [
     {
         "result_text_fg": "black",
         "result_text_bg": "white",
-        "text_box_fg": "white",
+        "text_box_fg": "black",
         "text_box_bg": "white",
         "button_fg": "white",
         "button_bg": "black",
