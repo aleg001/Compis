@@ -7,6 +7,7 @@ from yaplParser import yaplParser
 from antlr4.tree.Trees import Trees
 from Errors import CustomErrorListener
 import tkinter.messagebox as messagebox
+from graphviz import Digraph
 
 
 class Terminal:
@@ -107,6 +108,31 @@ class Terminal:
             "end",
             'Escribe "exit<RETURN>" para salir\n',
         )
+
+    def antlr_to_dot(self, tree, rule_names):
+        graph = Digraph()
+        self.antlr_to_dot_rec(tree, rule_names, graph)
+        return graph
+
+    def antlr_to_dot_rec(self, tree, rule_names, graph, parent=None):
+        node_id = str(id(tree))
+
+        if tree.getChildCount() == 0:
+            graph.node(node_id, label=tree.getText())
+        else:
+            label = Trees.getNodeText(tree, rule_names)
+            graph.node(node_id, label=label)
+
+            for i in range(tree.getChildCount()):
+                child = tree.getChild(i)
+                self.antlr_to_dot_rec(child, rule_names, graph, node_id)
+
+        if parent is not None:
+            graph.edge(parent, node_id)
+
+    def visualize_tree(self, graph):
+        graph.format = "png"
+        graph.render("tree", view=True)
 
     def insert_newline(self, event=None):
         if event.state & 0x1:
