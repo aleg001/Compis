@@ -63,6 +63,7 @@ class Terminal:
         self.command_counter = 0
 
         self.input_stream = None
+
         self.error_listener = CustomErrorListener()
         self.lexer = yaplLexer(self.input_stream)
         self.lexer.removeErrorListeners()
@@ -77,7 +78,7 @@ class Terminal:
 
     def parse_and_execute(self, input_text):
         self.input_stream = InputStream(input_text)
-
+        print(f"Input text: '{input_text}'")
         self.lexer = yaplLexer(self.input_stream)
         self.lexer.removeErrorListeners()
         self.lexer.addErrorListener(self.error_listener)
@@ -89,8 +90,12 @@ class Terminal:
         self.parser.addErrorListener(self.error_listener)
 
         self.error_listener.errors = []
+        tree = self.parser.program()
+        dot_graph = self.antlr_to_dot(tree, self.parser.ruleNames, self.parser)
 
-        tree = self.parser.expr()
+        dot_graph.render(filename="tree", format="png", cleanup=True)
+        img = Image.open("tree.png")
+        img.show()
 
         if self.parser.getNumberOfSyntaxErrors() == 0:
             tree_str = Trees.toStringTree(tree, None, self.parser)
@@ -110,26 +115,26 @@ class Terminal:
             'Escribe "exit<RETURN>" para salir\n',
         )
 
-    def antlr_to_dot(self, tree, rule_names):
+    @staticmethod
+    def antlr_to_dot(tree, rule_names, parser):
         graph = Digraph()
-        self.antlr_to_dot_rec(tree, rule_names, graph)
+
+        def recurse(node, parent=None):
+            node_id = str(id(node))
+            if node.getChildCount() == 0:
+                label = Trees.getNodeText(node, rule_names)
+                graph.node(node_id, label=label)
+            else:
+                label = Trees.getNodeText(node, rule_names)
+                graph.node(node_id, label=label)
+                for i in range(node.getChildCount()):
+                    child = node.getChild(i)
+                    recurse(child, node_id)
+            if parent is not None:
+                graph.edge(parent, node_id)
+
+        recurse(tree)
         return graph
-
-    def antlr_to_dot_rec(self, tree, rule_names, graph, parent=None):
-        node_id = str(id(tree))
-
-        if tree.getChildCount() == 0:
-            graph.node(node_id, label=tree.getText())
-        else:
-            label = Trees.getNodeText(tree, rule_names)
-            graph.node(node_id, label=label)
-
-            for i in range(tree.getChildCount()):
-                child = tree.getChild(i)
-                self.antlr_to_dot_rec(child, rule_names, graph, node_id)
-
-        if parent is not None:
-            graph.edge(parent, node_id)
 
     def visualize_tree(self, graph):
         graph.format = "png"
@@ -164,7 +169,8 @@ class Terminal:
         return "break"
 
     def run_command(self, event=None):
-        input_text = self.text_box.get("1.0", "end-1c").strip()
+        input_text = self.text_box.get("1.0", tk.END).strip()
+
         self.text_box.delete("1.0", "end")
         if not self.shell_started:
             if input_text.lower() == "start" and self.first_terminal_shell:

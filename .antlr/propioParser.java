@@ -1,4 +1,4 @@
-// Generated from /Users/alegomez/Documents/UVG/Cuarto Año/Segundo Semestre/Compis/Compis/yapl.g4 by ANTLR 4.9.2
+// Generated from /Users/alegomez/Documents/UVG/Cuarto Año/Segundo Semestre/Compis/Compis/propio.g4 by ANTLR 4.9.2
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
-public class yaplParser extends Parser {
+public class propioParser extends Parser {
 	static { RuntimeMetaData.checkVersion("4.9.2", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
@@ -84,7 +84,7 @@ public class yaplParser extends Parser {
 	}
 
 	@Override
-	public String getGrammarFileName() { return "yapl.g4"; }
+	public String getGrammarFileName() { return "propio.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }
@@ -95,13 +95,13 @@ public class yaplParser extends Parser {
 	@Override
 	public ATN getATN() { return _ATN; }
 
-	public yaplParser(TokenStream input) {
+	public propioParser(TokenStream input) {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 
 	public static class ProgramContext extends ParserRuleContext {
-		public TerminalNode EOF() { return getToken(yaplParser.EOF, 0); }
+		public TerminalNode EOF() { return getToken(propioParser.EOF, 0); }
 		public List<ClasskeyContext> classkey() {
 			return getRuleContexts(ClasskeyContext.class);
 		}
@@ -153,12 +153,12 @@ public class yaplParser extends Parser {
 	}
 
 	public static class ClasskeyContext extends ParserRuleContext {
-		public TerminalNode CLASS() { return getToken(yaplParser.CLASS, 0); }
-		public List<TerminalNode> TYPE() { return getTokens(yaplParser.TYPE); }
+		public TerminalNode CLASS() { return getToken(propioParser.CLASS, 0); }
+		public List<TerminalNode> TYPE() { return getTokens(propioParser.TYPE); }
 		public TerminalNode TYPE(int i) {
-			return getToken(yaplParser.TYPE, i);
+			return getToken(propioParser.TYPE, i);
 		}
-		public TerminalNode INHERITS() { return getToken(yaplParser.INHERITS, 0); }
+		public TerminalNode INHERITS() { return getToken(propioParser.INHERITS, 0); }
 		public List<FeatureContext> feature() {
 			return getRuleContexts(FeatureContext.class);
 		}
@@ -228,8 +228,8 @@ public class yaplParser extends Parser {
 	}
 
 	public static class FeatureContext extends ParserRuleContext {
-		public TerminalNode ID() { return getToken(yaplParser.ID, 0); }
-		public TerminalNode TYPE() { return getToken(yaplParser.TYPE, 0); }
+		public TerminalNode ID() { return getToken(propioParser.ID, 0); }
+		public TerminalNode TYPE() { return getToken(propioParser.TYPE, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
@@ -339,8 +339,8 @@ public class yaplParser extends Parser {
 	}
 
 	public static class FormalContext extends ParserRuleContext {
-		public TerminalNode ID() { return getToken(yaplParser.ID, 0); }
-		public TerminalNode TYPE() { return getToken(yaplParser.TYPE, 0); }
+		public TerminalNode ID() { return getToken(propioParser.ID, 0); }
+		public TerminalNode TYPE() { return getToken(propioParser.TYPE, 0); }
 		public FormalContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -373,28 +373,28 @@ public class yaplParser extends Parser {
 	}
 
 	public static class ExpressionContext extends ParserRuleContext {
-		public TerminalNode IF() { return getToken(yaplParser.IF, 0); }
+		public TerminalNode IF() { return getToken(propioParser.IF, 0); }
 		public List<ExpressionContext> expression() {
 			return getRuleContexts(ExpressionContext.class);
 		}
 		public ExpressionContext expression(int i) {
 			return getRuleContext(ExpressionContext.class,i);
 		}
-		public TerminalNode THEN() { return getToken(yaplParser.THEN, 0); }
-		public TerminalNode ELSE() { return getToken(yaplParser.ELSE, 0); }
-		public TerminalNode FI() { return getToken(yaplParser.FI, 0); }
-		public TerminalNode ID() { return getToken(yaplParser.ID, 0); }
-		public TerminalNode WHILE() { return getToken(yaplParser.WHILE, 0); }
-		public TerminalNode LOOP() { return getToken(yaplParser.LOOP, 0); }
-		public TerminalNode POOL() { return getToken(yaplParser.POOL, 0); }
-		public TerminalNode ISVOID() { return getToken(yaplParser.ISVOID, 0); }
-		public TerminalNode NOT() { return getToken(yaplParser.NOT, 0); }
-		public TerminalNode NEW() { return getToken(yaplParser.NEW, 0); }
-		public TerminalNode TYPE() { return getToken(yaplParser.TYPE, 0); }
-		public TerminalNode STRING() { return getToken(yaplParser.STRING, 0); }
-		public TerminalNode FALSE() { return getToken(yaplParser.FALSE, 0); }
-		public TerminalNode TRUE() { return getToken(yaplParser.TRUE, 0); }
-		public TerminalNode INT() { return getToken(yaplParser.INT, 0); }
+		public TerminalNode THEN() { return getToken(propioParser.THEN, 0); }
+		public TerminalNode ELSE() { return getToken(propioParser.ELSE, 0); }
+		public TerminalNode FI() { return getToken(propioParser.FI, 0); }
+		public TerminalNode ID() { return getToken(propioParser.ID, 0); }
+		public TerminalNode WHILE() { return getToken(propioParser.WHILE, 0); }
+		public TerminalNode LOOP() { return getToken(propioParser.LOOP, 0); }
+		public TerminalNode POOL() { return getToken(propioParser.POOL, 0); }
+		public TerminalNode ISVOID() { return getToken(propioParser.ISVOID, 0); }
+		public TerminalNode NOT() { return getToken(propioParser.NOT, 0); }
+		public TerminalNode NEW() { return getToken(propioParser.NEW, 0); }
+		public TerminalNode TYPE() { return getToken(propioParser.TYPE, 0); }
+		public TerminalNode STRING() { return getToken(propioParser.STRING, 0); }
+		public TerminalNode FALSE() { return getToken(propioParser.FALSE, 0); }
+		public TerminalNode TRUE() { return getToken(propioParser.TRUE, 0); }
+		public TerminalNode INT() { return getToken(propioParser.INT, 0); }
 		public ExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}

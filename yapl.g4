@@ -1,42 +1,63 @@
 grammar yapl;
 
-program: class+;
+// Referencia: https://github.com/dayfundora/Cool-Compiler/blob/main/src/CoolMIPS_Compiler_DW/ANTLR/Cool.g4
 
-class: 'class' TYPE ('inherits' TYPE)? '{' feature* '}';
+program  : ( classkey ';' ) + EOF;
 
-feature: ID '(' (formal (',' formal)*)? ')' ':' TYPE '{' expr '}' ';'
-        | ID ':' TYPE '<-' expr ';';
+classkey :  CLASS TYPE (INHERITS TYPE)? '{' (feature ';')* '}';
 
-formal: ID ':' TYPE;
+feature  :  (ID '(' (formal (',' formal)*)* ')' ':' TYPE '{' expression '}') | formal ('<-' expression)?;
 
-expr: ID '<-' expr
-        | expr '[' TYPE ']' '.' ID '(' (expr (',' expr)*)? ')'
-        | ID '(' (expr (',' expr)*)? ')'
-        | 'if' expr 'then' expr 'else' expr 'fi'
-        | 'while' expr 'loop' expr 'pool'
-        | '{' expr+ '}'
-        | 'let' ID ':' TYPE ('<-' expr)? (',' ID ':' TYPE ('<-' expr)?) * 'in' expr
-        | 'new' TYPE
-        | 'isvoid' expr
-        | expr '+' expr
-        | expr '-' expr
-        | expr '*' expr
-        | expr '/' expr
-        | '~' expr
-        | expr '<' expr
-        | expr '<=' expr
-        | expr '=' expr
-        | 'not' expr
-        | '(' expr ')'
-        | ID
-        | INTEGER
-        | STRING
-        | 'true'
-        | 'false';
+formal   :  ID ':' TYPE;
 
-TYPE: [A-Z][a-zA-Z0-9_]*;
-ID: [a-z][a-zA-Z0-9_]*;
-INTEGER: [0-9]+;
-STRING: '"' (~["\r\n] | '\\' .)* '"';
+expression : expression ('@' TYPE)? '.' ID '(' (expression (',' expression)*)* ')'
+    | IF expression THEN expression ELSE expression FI
+    | ID '(' (expression (',' expression)*)* ')'
+    | WHILE expression LOOP expression POOL
+    | expression ('*' | '/') expression           
+    | expression ('+' | '-') expression               
+    | expression '<-' expression             
+    | '{' (expression ';')+ '}'                         
+    | expression '=' expression             
+    | expression '<' expression             
+    | ID '<-' expression               
+    | ISVOID expression                 
+    | '~' expression               
+    | NOT expression                  
+    | '(' expression ')'               
+    | NEW TYPE               
+    | STRING              
+    | FALSE           
+    | TRUE           
+    | INT                   
+    | ID                  
+    ;
 
-WS: [\t\r\n]+ -> skip;
+// Palabras reservadas
+CLASS       :   'class';
+ELSE        :   'else';
+FALSE       :   'false';
+FI          :   'fi';
+IF          :   'if';
+IN          :   'in';
+INHERITS    :   'inherits';
+ISVOID      :   'isvoid';
+LOOP        :   'loop';
+POOL        :   'pool';
+THEN        :   'then';
+WHILE       :   'while';
+NEW         :   'new';
+NOT         :   'not';
+TRUE        :   'true';
+
+// Expecificaciones lexicas
+STRING      :   '"' ( ('\\' (["\\/bfnrt] | ('u' [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F]))) | ~ ["\\])* '"';
+INT         :   [0-9]+;
+TYPE        :   [A-Z][_0-9A-Za-z]*;
+ID          :   [a-z][_0-9A-Za-z]*;
+
+// Omisiones
+
+WHITESPACE      :   [ \t\r\n\f]+ -> skip; 
+BLOCK_COMMENT   :   '(*' (BLOCK_COMMENT|.)*? '*)'   -> channel(HIDDEN);
+LINE_COMMENT    :   '--' .*? '\n'       -> channel(HIDDEN);

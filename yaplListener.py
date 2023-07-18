@@ -17,12 +17,12 @@ class yaplListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by yaplParser#class.
-    def enterClass(self, ctx:yaplParser.ClassContext):
+    # Enter a parse tree produced by yaplParser#classkey.
+    def enterClasskey(self, ctx:yaplParser.ClasskeyContext):
         pass
 
-    # Exit a parse tree produced by yaplParser#class.
-    def exitClass(self, ctx:yaplParser.ClassContext):
+    # Exit a parse tree produced by yaplParser#classkey.
+    def exitClasskey(self, ctx:yaplParser.ClasskeyContext):
         pass
 
 
@@ -44,12 +44,12 @@ class yaplListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by yaplParser#expr.
-    def enterExpr(self, ctx:yaplParser.ExprContext):
+    # Enter a parse tree produced by yaplParser#expression.
+    def enterExpression(self, ctx:yaplParser.ExpressionContext):
         pass
 
-    # Exit a parse tree produced by yaplParser#expr.
-    def exitExpr(self, ctx:yaplParser.ExprContext):
+    # Exit a parse tree produced by yaplParser#expression.
+    def exitExpression(self, ctx:yaplParser.ExpressionContext):
         pass
 
 
