@@ -8,6 +8,7 @@ from antlr4.tree.Trees import Trees
 from Errors import CustomErrorListener
 import tkinter.messagebox as messagebox
 from graphviz import Digraph
+from PIL import Image, ImageTk
 
 
 class Terminal:
@@ -132,7 +133,18 @@ class Terminal:
 
     def visualize_tree(self, graph):
         graph.format = "png"
-        graph.render("tree", view=True)
+        file_path = "tree.png"
+        graph.render(file_path, view=False)
+
+        img = Image.open(file_path)
+        photo = ImageTk.PhotoImage(img)
+
+        window = tk.Toplevel(self.root)
+        window.title("Syntax Tree")
+
+        label = tk.Label(window, image=photo)
+        label.image = photo
+        label.pack()
 
     def insert_newline(self, event=None):
         if event.state & 0x1:
