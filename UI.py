@@ -9,6 +9,9 @@ from Errors import CustomErrorListener
 import tkinter.messagebox as messagebox
 from graphviz import Digraph
 from PIL import Image, ImageTk
+from SymbolTable import *
+from TypeSystem import *
+from Transversar import *
 
 
 class Terminal:
@@ -91,6 +94,10 @@ class Terminal:
 
         self.error_listener.errors = []
         tree = self.parser.program()
+        symbol_table = SymbolTable()
+        type_system = TypeSystem()
+        traverse(tree, symbol_table, type_system)
+
         dot_graph = self.antlr_to_dot(tree, self.parser.ruleNames, self.parser)
 
         dot_graph.render(filename="tree", format="png", cleanup=True)
