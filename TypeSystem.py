@@ -2,6 +2,14 @@ class TypeSystem:
     def __init__(self):
         self.types = {"int": int, "bool": bool}
 
+    def inferir(self, value):
+        if type(value) is int:
+            return "int"
+        elif type(value) is bool:
+            return "bool"
+        else:
+            raise TypeError(f"Desconocido: {type(value)}")
+
     def add_type(self, type_name, type):
         self.types[type_name] = type
 
