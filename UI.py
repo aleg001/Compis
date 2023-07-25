@@ -11,7 +11,7 @@ from graphviz import Digraph
 from PIL import Image, ImageTk
 from SymbolTable import *
 from TypeSystem import *
-from Transversar import *
+from Visitor import *
 
 
 class Terminal:
@@ -22,6 +22,8 @@ class Terminal:
         self.root.geometry("3000x3000")
         self.root.minsize(800, 700)
         self.root.maxsize(800, 700)
+        self.symbol_table = SymbolTable()
+        self.type_system = TypeSystem()
 
         self.theme_button = ttk.Button(
             self.root, text="Cambiar tema", command=self.change_theme, style="TButton"
@@ -94,9 +96,10 @@ class Terminal:
 
         self.error_listener.errors = []
         tree = self.parser.program()
-        symbol_table = SymbolTable()
-        type_system = TypeSystem()
-        traverse(tree, symbol_table, type_system)
+
+        visitor = MyVisitor(self.symbol_table, self.type_system)
+        visitor.visit(tree)
+        self.symbol_table.show()
 
         dot_graph = self.antlr_to_dot(tree, self.parser.ruleNames, self.parser)
 
@@ -218,6 +221,9 @@ class Terminal:
             self.result_text.see("end")
 
             self.command_counter += 1
+
+            visitor = MyVisitor(self.symbol_table, self.type_system)
+            visitor.visit(tree)
 
     def change_theme(self):
         if not hasattr(self, "theme_index"):
