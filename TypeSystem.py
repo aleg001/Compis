@@ -16,6 +16,8 @@ class TypeSystem:
     def get_type(self, type_name):
         return self.types.get(type_name, None)
 
+    # Para int
+
     def add(self, operand1, operand2):
         if type(operand1) is int and type(operand2) is int:
             return operand1 + operand2
@@ -29,6 +31,8 @@ class TypeSystem:
             raise TypeError(
                 "Los operandos deben ser enteros para la operación de resta"
             )
+
+    # Para bool
 
     def and_op(self, operand1, operand2):
         if type(operand1) is bool and type(operand2) is bool:
