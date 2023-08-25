@@ -399,8 +399,9 @@ class yaplVisitor(ParseTreeVisitor):
     # Visit a parse tree produced by yaplParser#dispatchExplicitA.
     def visitDispatchExplicitA(self, ctx:yaplParser.DispatchExplicitAContext):
         return self.visitChildren(ctx)
-
-    """ Parte que permite la comparacion de tipos """
+ 
+    """ Parte que permite la comparacion de tipos """ 
+    """ Parte que permite la comparacion de tipos """ 
 
 
     def check_binary_operation(self, left_type, right_type, operation):
