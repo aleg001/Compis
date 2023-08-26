@@ -329,3 +329,51 @@ class yaplVisitor(ParseTreeVisitor):
     # Visit a parse tree produced by yaplParser#dispatchExplicitA.
     def visitDispatchExplicitA(self, ctx: yaplParser.DispatchExplicitAContext):
         return self.visitChildren(ctx)
+
+    def check_binary_operation(self, left_type, right_type, operation):
+        valid_combinations = {
+            "+": [("Int", "Int"), ("Bool", "Bool")],
+            "-": [("Int", "Int")],
+            "*": [("Int", "Int"), ("Bool", "Bool")],
+            "/": [("Int", "Int")],
+            "&&": [("Bool", "Bool")],
+            "||": [("Bool", "Bool")],
+        }
+
+        if (left_type, right_type) in valid_combinations[operation]:
+            return left_type
+        else:
+            self.errores.append(
+                f"Invalid operation: {operation} cannot be applied to {left_type} and {right_type}"
+            )
+            return "Error"
+
+    def visitAddition(self, ctx):
+        left_type = self.visit(ctx.left)
+        right_type = self.visit(ctx.right)
+        return self.check_binary_operation(left_type, right_type, "+")
+
+    def visitSubtraction(self, ctx):
+        left_type = self.visit(ctx.left)
+        right_type = self.visit(ctx.right)
+        return self.check_binary_operation(left_type, right_type, "-")
+
+    def visitMultiplication(self, ctx):
+        left_type = self.visit(ctx.left)
+        right_type = self.visit(ctx.right)
+        return self.check_binary_operation(left_type, right_type, "*")
+
+    def visitDivision(self, ctx):
+        left_type = self.visit(ctx.left)
+        right_type = self.visit(ctx.right)
+        return self.check_binary_operation(left_type, right_type, "/")
+
+    def visitLogicalAND(self, ctx):
+        left_type = self.visit(ctx.left)
+        right_type = self.visit(ctx.right)
+        return self.check_binary_operation(left_type, right_type, "&&")
+
+    def visitLogicalOR(self, ctx):
+        left_type = self.visit(ctx.left)
+        right_type = self.visit(ctx.right)
+        return self.check_binary_operation(left_type, right_type, "||")
