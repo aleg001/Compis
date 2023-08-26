@@ -341,6 +341,10 @@ class yaplVisitor(ParseTreeVisitor):
         }
 
         if (left_type, right_type) in valid_combinations[operation]:
+
+            if operation == "/" and right_type == 0:
+                self.errores.append("Division by zero error.")
+                return "Error"
             return left_type
         else:
             self.errores.append(
