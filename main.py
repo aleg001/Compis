@@ -107,6 +107,16 @@ class TerminalApp:
         self.root.grid_columnconfigure(1, weight=1)
         self.root.grid_columnconfigure(2, weight=0)
 
+        self.exit_button = tk.Button(
+            button_frame,
+            text="Exit",
+            command=self.close_window,
+            bg="#E95678",
+            fg="red",
+            font=font_style,
+        )
+        self.exit_button.pack(fill=tk.BOTH, padx=10, pady=5)
+
     # def show table
     def show_table(self):
         input_stream = FileStream("./input.txt")
@@ -175,6 +185,9 @@ class TerminalApp:
     def clear_output(self):
         self.input_text.delete("1.0", tk.END)
         self.output_text.delete("1.0", tk.END)
+
+    def close_window(self):
+        self.root.destroy()
 
 
 def main():
