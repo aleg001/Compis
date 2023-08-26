@@ -46,8 +46,20 @@ class List {
    -- conforms to the return type List, because Cons is a subclass of
    -- List.
 
+   car : Int;	-- The element in this list cell
+
+   cdr : List;	-- The rest of the list
+
+   init(i : Int, rest : List) : List {
+      {
+	 car <- i;
+	 cdr <- rest;
+	 self;
+      }
+   };
+
    cons(i : Int) : List {
-      (new Cons).init(i, self)
+      (new List).init(i, self)
    };
 
 };
@@ -105,7 +117,7 @@ class Main inherits IO {
    -- the tail of the list, until the end of the list is reached.
 
    print_list(l : List) : Object {
-      if l.isNil() then out_string("\n")
+      if ( true ) then out_string("\n")
                    else {
 			   out_int(l.head());
 			   out_string(" ");
@@ -126,7 +138,7 @@ class Main inherits IO {
    main() : Object {
       {
 	 mylist <- new List.cons(1).cons(2).cons(3).cons(4).cons(5);
-	 while (not mylist.isNil()) loop
+	 while ( true ) loop
 	    {
 	       print_list(mylist);
 	       mylist <- mylist.tail();
@@ -136,6 +148,3 @@ class Main inherits IO {
    };
 
 };
-
-
-

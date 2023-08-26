@@ -20,7 +20,7 @@ from antlr_files.yaplLexer import yaplLexer
 from antlr_files.yaplParser import yaplParser
 from antlr_files.yaplListener import yaplListener
 from antlr4.error.ErrorListener import ErrorListener
-from Visitor import yaplVisitor
+from visitor import yaplVisitor
 
 import tkinter as tk
 
@@ -28,7 +28,7 @@ import tkinter as tk
 class CustomErrorListener(ErrorListener):
     def __init__(self):
         self.errors = []
-
+        
     def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
         self.errors.append(f"line {line}:{column} {msg}")
 
@@ -36,165 +36,98 @@ class CustomErrorListener(ErrorListener):
 class TerminalApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Compis - YAPL")
+        self.root.title("Mini Sublime Text")
         self.root.configure(bg="#0D2844")
-        self.root.geometry("800x600")  # default window size
-        self.root.minsize(600, 400)  # minimum window size
 
         self.create_widgets()
 
     def create_widgets(self):
-        # Styling
-        bg_color = "#2A2E37"
-        fg_color = "#C0C5CE"
-        error_color = "#E95678"
-        font_style = ("Arial", 12)
+        self.input_text = tk.Text(self.root, height=30, width=50, bg="black", fg="white", insertbackground="white")
+        self.output_text = tk.Text(self.root, height=30, width=30, bg="gray", fg="red", insertbackground="white")
+        
+        self.input_text.grid(row=0, column=0, padx=10, pady=10, rowspan=2)
+        self.output_text.grid(row=0, column=1, padx=10, pady=10, rowspan=2)
+        
+        button_frame = tk.Frame(self.root, bg="#0D2844")  # Crear un marco para los botones
+        self.execute_button = tk.Button(button_frame, text="Ejecutar", command=self.execute_command, bg="black", fg="white")
+        self.clear_button = tk.Button(button_frame, text="Limpiar", command=self.clear_output, bg="black", fg="white")
+        self.show_table_button = tk.Button(button_frame, text="Mostrar Tabla", command=self.show_table, bg="black", fg="white")
 
-        # Text widgets for input and output
-        self.input_text = tk.Text(
-            self.root,
-            bg=bg_color,
-            fg=fg_color,
-            insertbackground=fg_color,
-            font=font_style,
-            wrap=tk.WORD,
-        )
-        self.output_text = tk.Text(
-            self.root,
-            bg=bg_color,
-            fg=error_color,
-            insertbackground=fg_color,
-            font=font_style,
-            state=tk.DISABLED,
-        )
-        self.input_text.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
-        self.output_text.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+        self.execute_button.pack(side="top", padx=10, pady=5)  # Empaquetar los botones en el marco
+        self.clear_button.pack(side="top", padx=10, pady=5)
+        self.show_table_button.pack(side="top", padx=10, pady=5)
 
-        # Buttons
-        button_frame = tk.Frame(self.root, bg="#0D2844")
-        self.execute_button = tk.Button(
-            button_frame,
-            text="Run",
-            command=self.execute_command,
-            bg="#4B8B3B",
-            fg=fg_color,
-            font=font_style,
-        )
-        self.clear_button = tk.Button(
-            button_frame,
-            text="Clear",
-            command=self.clear_output,
-            bg="#A93B3B",
-            fg=fg_color,
-            font=font_style,
-        )
-        self.show_table_button = tk.Button(
-            button_frame,
-            text="Show Table",
-            command=self.show_table,
-            bg="#3B65A9",
-            fg=fg_color,
-            font=font_style,
-        )
-        self.execute_button.pack(fill=tk.BOTH, padx=10, pady=5)
-        self.clear_button.pack(fill=tk.BOTH, padx=10, pady=5)
-        self.show_table_button.pack(fill=tk.BOTH, padx=10, pady=5)
-        button_frame.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
+        button_frame.grid(row=0, column=2, padx=10, pady=10, rowspan=2)  # Colocar el marco en la celda
 
-        # Configure weights for resizing
-        self.root.grid_rowconfigure(0, weight=1)
-        self.root.grid_columnconfigure(0, weight=2)
-        self.root.grid_columnconfigure(1, weight=1)
-        self.root.grid_columnconfigure(2, weight=0)
-
-        self.exit_button = tk.Button(
-            button_frame,
-            text="Exit",
-            command=self.close_window,
-            bg="#E95678",
-            fg="red",
-            font=font_style,
-        )
-        self.exit_button.pack(fill=tk.BOTH, padx=10, pady=5)
-
-    # def show table
+    # def sho
     def show_table(self):
-        input_stream = FileStream("./input.txt")
+        input_stream = FileStream('./input.txt')
         lexer = yaplLexer(input_stream)
 
         tokens = CommonTokenStream(lexer)
         parser = yaplParser(tokens)
-
+            
         parser.removeErrorListeners()
         lexer.removeErrorListeners()
         error_listener = CustomErrorListener()
         lexer.addErrorListener(error_listener)
         parser.addErrorListener(error_listener)
-
+        
         tree = parser.program()
 
         visitor = yaplVisitor()
         visitor_result = visitor.visit(tree)
         visitor.tabla.show_rows()
-
+        
     def execute_command(self):
-
+        
         # user input
-        # user_input = self.input_text.get("1.0", "end-1c")
+        user_input = self.input_text.get("1.0", "end-1c")
 
-        # # Crear un archivo "input.txt" y escribir el contenido
-        # with open("input.txt", "w") as file:
-        #     file.write(user_input)
+        # Crear un archivo "input.txt" y escribir el contenido
+        with open("input.txt", "w") as file:
+            file.write(user_input)
 
         # Mostrar arbol
-        process = subprocess.Popen(
-            ["antlr4-parse", "./antlr_files/yapl.g4", "program", "-gui"],
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-        )
-        with open("input.txt", "r") as file:
+        process = subprocess.Popen(['antlr4-parse', './antlr_files/yapl.g4', 'program', '-gui'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        with open('input.txt', "r") as file:
             insertion_of_user = file.read()
-
+        
         # input stream
-        input_stream = FileStream("./input.txt")
+        input_stream = FileStream('./input.txt')
         lexer = yaplLexer(input_stream)
 
         tokens = CommonTokenStream(lexer)
         parser = yaplParser(tokens)
-
+            
         parser.removeErrorListeners()
         lexer.removeErrorListeners()
         error_listener = CustomErrorListener()
         lexer.addErrorListener(error_listener)
         parser.addErrorListener(error_listener)
-
+        
         tree = parser.program()
 
         visitor = yaplVisitor()
         visitor_result = visitor.visit(tree)
-
+        
         for x in error_listener.errors:
-            self.output_text.insert(tk.END, x + "\n")
-
+            self.output_text.insert(tk.END, x + "\n\n")
+        
         for x in visitor.errores:
-            self.output_text.insert(tk.END, x + "\n")
-
-        process.communicate(input=insertion_of_user.encode("utf-8"))
-
+            self.output_text.insert(tk.END, x + "\n\n")
+        
+        process.communicate(input=insertion_of_user.encode('utf-8'))
+        
     def clear_output(self):
         self.input_text.delete("1.0", tk.END)
         self.output_text.delete("1.0", tk.END)
-
-    def close_window(self):
-        self.root.destroy()
 
 
 def main():
     root = tk.Tk()
     app = TerminalApp(root)
     root.mainloop()
-
 
 if __name__ == "__main__":
     main()

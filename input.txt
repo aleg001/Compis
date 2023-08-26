@@ -70,7 +70,7 @@ class A {
 
 class B inherits A {  -- B is a number squared
 
-   method5(num : Int) : E { -- square
+   method5(num : Int) : Int { -- square
       (let x : Int in
 	 {
             x <- num * num;
