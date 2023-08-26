@@ -381,3 +381,17 @@ class yaplVisitor(ParseTreeVisitor):
         left_type = self.visit(ctx.left)
         right_type = self.visit(ctx.right)
         return self.check_binary_operation(left_type, right_type, "||")
+
+    def visitIfStatement(self, ctx: yaplParser.IfStatementContext):
+        condition_type = self.visit(ctx.condition)
+        if condition_type != "Bool":
+            self.errores.append(
+                f"Expected boolean type in 'if' condition, got {condition_type} instead at line {ctx.start.line}"
+            )
+
+    def visitWhileStatement(self, ctx: yaplParser.WhileStatementContext):
+        condition_type = self.visit(ctx.condition)
+        if condition_type != "Bool":
+            self.errores.append(
+                f"Expected boolean type in 'while' condition, got {condition_type} instead at line {ctx.start.line}"
+            )
