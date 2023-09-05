@@ -1,6 +1,8 @@
 class A {
 
    var : Int <- 0;
+   var1 : String <- "Golaaaaaaaaaso";
+   var2 : String <- "Golaaaaaaaaaso";
    value() : Int { var };
 
    set_var(num : Int) : SELF_TYPE {
@@ -70,7 +72,7 @@ class A {
 
 class B inherits A {  -- B is a number squared
 
-   method5(num : Int) : Int { -- square
+   method5(num : Int) : E { -- square
       (let x : Int in
 	 {
             x <- num * num;

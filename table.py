@@ -4,9 +4,9 @@ from tkinter import ttk
 class Table:
     def __init__(self):
         self.table = []
-    
-    def append_row(self,tipo,nombre, inherits, campo, tamanio, scope, inside, parametros=[]):
-        fila = Row(tipo,nombre, inherits, campo, tamanio, scope, inside, parametros)
+
+    def append_row(self,tipo,nombre, inherits, campo, tamanio, scope, inside, parametros=[], offset = None):
+        fila = Row(tipo,nombre, inherits, campo, tamanio, scope, inside, parametros, offset)
         self.table.append(fila)
 
     def is_in_table(self, nombre, scope):
@@ -19,19 +19,19 @@ class Table:
         for fila in self.table:
             if fila.nombre == nombre and fila.scope == scope:
                 return fila
-        
+
         return None
 
     def lista_a_string_con_saltos_de_linea(self, lista):
-        resultado = '\n'.join(lista)
+        resultado = ' '.join(lista)
         return resultado
 
     def show_rows(self):
         root = tk.Tk()
         root.title("Tabla de Filas")
-        
+
         tree = ttk.Treeview(root)
-        tree["columns"] = ("Tipo", "Nombre", "Inherits", "Campo", "Tamaño", "Scope", "Inside")
+        tree["columns"] = ("Tipo", "Nombre", "Inherits", "Campo", "Tamaño", "Scope", "Inside", "Offset")
         tree.heading("#0", text="Índice")
         tree.heading("Tipo", text="Tipo")
         tree.heading("Nombre", text="Nombre")
@@ -41,6 +41,7 @@ class Table:
         tree.heading("Scope", text="Scope")
         tree.heading("Inside", text="Inside")
         # tree.heading("Parametros", text="Parametros")
+        tree.heading("Offset", text="Offset")
 
         for idx, fila in enumerate(self.table, start=1):
             values = (
@@ -50,7 +51,8 @@ class Table:
                 fila.campo,
                 fila.tamanio,
                 fila.scope,
-                fila.inside
+                fila.inside,
+                fila.offset
                 # fila.parametros
             )
             tree.insert("", "end", text=idx, values=values)
@@ -65,12 +67,13 @@ class Table:
         tree.column("Scope", width=200)
         tree.column("Inside", width=300)
         # tree.column("Parametros", width=300)
+        tree.column("Offset", width=200)
         tree.configure(height=40)
         tree.pack(fill="both", expand=True)
 
         root.mainloop()
 class Row:
-    def __init__(self,tipo, nombre, inherits, campo, tamanio, scope, inside, parametros = []):
+    def __init__(self,tipo, nombre, inherits, campo, tamanio, scope, inside, parametros = [], offset = None):
         self.tipo = tipo
         self.nombre = nombre
         self.inherits = inherits
@@ -79,12 +82,13 @@ class Row:
         self.scope = scope
         self.inside = inside
         self.parametros = parametros
+        self.offset = offset
     def __str__(self):
-        return (f"Tipo: {self.tipo}\n"
-                f"Nombre: {self.nombre}\n"
-                f"Inherits: {self.inherits}\n"
-                f"Campo: {self.campo}\n"
-                f"Tamaño: {self.tamanio}\n"
-                f"Scope: {self.scope}\n"
-                f"Inside: {self.inside}\n"
+        return (f"Tipo: {self.tipo} "
+                f"Nombre: {self.nombre} "
+                f"Inherits: {self.inherits} "
+                f"Campo: {self.campo} "
+                f"Tamaño: {self.tamanio} "
+                f"Scope: {self.scope} "
+                f"Inside: {self.inside} "
                 f"Parámetros: {self.parametros}")
