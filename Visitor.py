@@ -1,5 +1,6 @@
 # Generated from yapl.g4 by ANTLR 4.13.0
 from antlr4 import *
+
 if "." in __name__:
     from antlr_files.yaplParser import yaplParser
 else:
@@ -7,10 +8,11 @@ else:
 
 from table import *
 from tools import *
+
 # This class defines a complete generic visitor for a parse tree produced by yaplParser.
 
-class yaplVisitor(ParseTreeVisitor):
 
+class yaplVisitor(ParseTreeVisitor):
     def __init__(self):
         self.errores = []
         self.scope = []
@@ -19,14 +21,12 @@ class yaplVisitor(ParseTreeVisitor):
         self.tabla = Table()
         # # # print("Que onda desde el root")
 
-
     """ Agrupacion de todas las clases """
 
     # * Visit a parse tree produced by yaplParser#programas.
 
-    def visitProgramas(self, ctx:yaplParser.ProgramasContext):
+    def visitProgramas(self, ctx: yaplParser.ProgramasContext):
         return self.visitChildren(ctx)
-
 
     """ Visitando Clase """
 
@@ -34,7 +34,7 @@ class yaplVisitor(ParseTreeVisitor):
     # * En este punto se manejan nombres y registro de que clases heredan de que otras
 
     # Visit a parse tree produced by yaplParser#clase.
-    def visitClase(self, ctx:yaplParser.ClaseContext):
+    def visitClase(self, ctx: yaplParser.ClaseContext):
         self.scope.append(ctx.TYPE(0).getText())
         self.metodo_scope.append(" ")
         inside = []
@@ -43,111 +43,115 @@ class yaplVisitor(ParseTreeVisitor):
         # # print('Scope ', self.scope)
 
         # Error si la clase ya fue declarada
-        if self.tabla.is_in_table(ctx.TYPE(0).getText(),'self'):
-            self.errores.append(f' > {ctx.TYPE(0).getText()} ya declarada')
+        if self.tabla.is_in_table(ctx.TYPE(0).getText(), "self"):
+            self.errores.append(f" > {ctx.TYPE(0).getText()} ya declarada")
 
         features = ctx.feature()
         for x in features:
-            if hasattr(x, 'ID') and callable(getattr(x, 'ID')):
+            if hasattr(x, "ID") and callable(getattr(x, "ID")):
                 inside.append(x.ID().getText())
-            elif hasattr(x, 'formal') and hasattr(x.formal(), 'ID') and callable(getattr(x.formal(), 'ID')):
+            elif (
+                hasattr(x, "formal")
+                and hasattr(x.formal(), "ID")
+                and callable(getattr(x.formal(), "ID"))
+            ):
                 inside.append(x.formal().ID().getText())
                 # # # print(x.formal().ID().getText())
 
         # Si la clase hereda simple
-        if (ctx.INHERITS()):
+        if ctx.INHERITS():
 
             # Si es Main
-            if( ctx.TYPE(0).getText() == 'Main' and ctx.TYPE(1).getText() != 'IO'):
-                self.errores.append(f' > {ctx.TYPE(0).getText()} solo hereda de IO')
-            if( ctx.TYPE(0).getText() == 'Main' and ctx.TYPE(1).getText() == 'IO'):
+            if ctx.TYPE(0).getText() == "Main" and ctx.TYPE(1).getText() != "IO":
+                self.errores.append(f" > {ctx.TYPE(0).getText()} solo hereda de IO")
+            if ctx.TYPE(0).getText() == "Main" and ctx.TYPE(1).getText() == "IO":
                 self.tabla.append_row(
-                    'class',
-                    'IO',
+                    "class",
+                    "IO",
                     None,
-                    'global',
+                    "global",
                     None,
-                    'self',
-                    ['out_string', 'x', 'out_int', 'x', 'in_string', 'in_int']
+                    "self",
+                    ["out_string", "x", "out_int", "x", "in_string", "in_int"],
                 )
 
                 self.tabla.append_row(
-                    tipo = 'SELF_TYPE',
-                    nombre = 'out_string',
-                    inherits = None,
-                    campo = 'local',
-                    tamanio = None,
-                    scope = 'IO',
-                    inside = ['x']
+                    tipo="SELF_TYPE",
+                    nombre="out_string",
+                    inherits=None,
+                    campo="local",
+                    tamanio=None,
+                    scope="IO",
+                    inside=["x"],
                 )
 
                 self.tabla.append_row(
-                    tipo = 'string',
-                    nombre = 'x',
-                    inherits = None,
-                    campo = 'local',
-                    tamanio = None,
-                    scope = ['IO', 'out_string'],
-                    inside = []
+                    tipo="string",
+                    nombre="x",
+                    inherits=None,
+                    campo="local",
+                    tamanio=None,
+                    scope=["IO", "out_string"],
+                    inside=[],
                 )
 
                 self.tabla.append_row(
-                    tipo = 'SELF_TYPE',
-                    nombre = 'out_int',
-                    inherits = None,
-                    campo = 'local',
-                    tamanio = None,
-                    scope = 'IO',
-                    inside = ['x']
+                    tipo="SELF_TYPE",
+                    nombre="out_int",
+                    inherits=None,
+                    campo="local",
+                    tamanio=None,
+                    scope="IO",
+                    inside=["x"],
                 )
 
                 self.tabla.append_row(
-                    tipo = 'int',
-                    nombre = 'x',
-                    inherits = None,
-                    campo = 'local',
-                    tamanio = None,
-                    scope = ['IO', 'out_int'],
-                    inside = []
+                    tipo="int",
+                    nombre="x",
+                    inherits=None,
+                    campo="local",
+                    tamanio=None,
+                    scope=["IO", "out_int"],
+                    inside=[],
                 )
 
                 self.tabla.append_row(
-                    tipo = 'string',
-                    nombre = 'in_string',
-                    inherits = None,
-                    campo = 'local',
-                    tamanio = None,
-                    scope = 'IO',
-                    inside = []
+                    tipo="string",
+                    nombre="in_string",
+                    inherits=None,
+                    campo="local",
+                    tamanio=None,
+                    scope="IO",
+                    inside=[],
                 )
 
                 self.tabla.append_row(
-                    tipo = 'int',
-                    nombre = 'in_int',
-                    inherits = None,
-                    campo = 'local',
-                    tamanio = None,
-                    scope = 'IO',
-                    inside = []
+                    tipo="int",
+                    nombre="in_int",
+                    inherits=None,
+                    campo="local",
+                    tamanio=None,
+                    scope="IO",
+                    inside=[],
                 )
 
             # Si hereda de una clase sin declarar
-            if not ctx.TYPE(1).getText() == 'IO':
-                if not self.tabla.is_in_table(ctx.TYPE(1).getText(),'self'):
-                    self.errores.append(f' > {ctx.TYPE(0).getText()} hereda de {ctx.TYPE(1).getText()} sin declarar')
-
-
+            if not ctx.TYPE(1).getText() == "IO":
+                if not self.tabla.is_in_table(ctx.TYPE(1).getText(), "self"):
+                    self.errores.append(
+                        f" > {ctx.TYPE(0).getText()} hereda de {ctx.TYPE(1).getText()} sin declarar"
+                    )
 
             # Registro en la tabla de simbolos
             self.tabla.append_row(
                 ctx.CLASS().getText(),
                 ctx.TYPE(0).getText(),
                 ctx.TYPE(1).getText(),
-                'global',
+                "global",
                 None,
-                'self',
-                [] # inside
-                )
+                "self",
+                [],  # inside
+            )
 
             self.inherits.append(ctx.TYPE(1).getText())
 
@@ -156,25 +160,23 @@ class yaplVisitor(ParseTreeVisitor):
                 ctx.CLASS().getText(),
                 ctx.TYPE(0).getText(),
                 None,
-                'global',
+                "global",
                 None,
-                'self',
-                []
-                )
+                "self",
+                [],
+            )
             self.inherits.append(" ")
 
         # self.scope.pop()
 
         return self.visitChildren(ctx)
 
-
-
     """ Visita un metodo"""
 
     # * Se agrega a la tabla de simbolos
 
     # Visit a parse tree produced by yaplParser#metodo.
-    def visitMetodo(self, ctx:yaplParser.MetodoContext):
+    def visitMetodo(self, ctx: yaplParser.MetodoContext):
 
         self.metodo_scope.append(ctx.ID().getText())
         # Variables asociadas al metodo
@@ -191,44 +193,57 @@ class yaplVisitor(ParseTreeVisitor):
 
         # Si ya esta en la tabla en la misma clase
         if self.tabla.is_in_table(ctx.ID().getText(), self.scope[-1]):
-            self.errores.append(f' > {ctx.ID().getText()} ya definida dentro de {self.scope[-1]}')
+            self.errores.append(
+                f" > {ctx.ID().getText()} ya definida dentro de {self.scope[-1]}"
+            )
 
         # Si la clase en la que esta el metodo tiene herencia
         if self.inherits[-1] != " ":
 
             # Si la clase de la que esta haciendo herencia existe
-            if self.tabla.is_in_table(self.inherits[-1], 'self'):
+            if self.tabla.is_in_table(self.inherits[-1], "self"):
 
                 # # # print("\noverride\n")
-                fila = self.tabla.fila(self.inherits[-1], 'self')
+                fila = self.tabla.fila(self.inherits[-1], "self")
                 # # # print(fila)
                 # Si el metodo es un override de los que existe dentro de la clase que hereda
                 if ctx.ID().getText() in fila.inside:
                     # # # print(f" Estudianddo metodo {ctx.ID().getText()}\n")
                     # # # print("\n Parametros: ", parametros, " \n")
                     # # # print("\n Parametros: ", type(parametros), " \n")
-                    fila_metodo_abstracto = self.tabla.fila(ctx.ID().getText(), fila.nombre)
+                    fila_metodo_abstracto = self.tabla.fila(
+                        ctx.ID().getText(), fila.nombre
+                    )
                     # # # print(fila_metodo_abstracto.parametros)
                     # # # print(type(fila_metodo_abstracto.parametros))
                     # # # print(are_lists_of_tuples_equal(fila_metodo_abstracto.parametros, parametros))
-                    if are_lists_of_tuples_equal(fila_metodo_abstracto.parametros, parametros) == False:
+                    if (
+                        are_lists_of_tuples_equal(
+                            fila_metodo_abstracto.parametros, parametros
+                        )
+                        == False
+                    ):
                         # # print('entro')
-                        self.errores.append(f' > Metodo {ctx.ID().getText()} en {self.scope[-1]} no tiene la misma firma que en la clase {fila.nombre}')
+                        self.errores.append(
+                            f" > Metodo {ctx.ID().getText()} en {self.scope[-1]} no tiene la misma firma que en la clase {fila.nombre}"
+                        )
                     if ctx.TYPE().getText() != fila_metodo_abstracto.tipo:
-                        self.errores.append(f' > Metodo {ctx.ID().getText()} en {self.scope[-1]} no tiene lo mismo que metodo en {fila.nombre}')
+                        self.errores.append(
+                            f" > Metodo {ctx.ID().getText()} en {self.scope[-1]} no tiene lo mismo que metodo en {fila.nombre}"
+                        )
 
         self.tabla.append_row(
-                ctx.TYPE().getText(),
-                ctx.ID().getText(),
-                None,
-                'local',
-                None,
-                self.scope[-1],
-                [], # inside,
-                parametros
+            ctx.TYPE().getText(),
+            ctx.ID().getText(),
+            None,
+            "local",
+            None,
+            self.scope[-1],
+            [],  # inside,
+            parametros,
         )
 
-        self.tabla.fila(self.scope[-1], 'self').inside.append(ctx.ID().getText())
+        self.tabla.fila(self.scope[-1], "self").inside.append(ctx.ID().getText())
 
         return self.visitChildren(ctx)
 
@@ -240,7 +255,7 @@ class yaplVisitor(ParseTreeVisitor):
     # * abajo de este punto son expresiones y formatos (Inicializaciones de variables)
 
     # Visit a parse tree produced by yaplParser#propiedad.
-    def visitPropiedad(self, ctx:yaplParser.PropiedadContext):
+    def visitPropiedad(self, ctx: yaplParser.PropiedadContext):
 
         # # banner(' formal ', False)
 
@@ -249,11 +264,11 @@ class yaplVisitor(ParseTreeVisitor):
         # Valor literal formal
         # print(ctx.formal().ID().getText())
         # Tipo expr
-        tipo_expr_14_15_16 = ''
+        tipo_expr_14_15_16 = ""
 
         # TODO: Visitando expr:15 INT
 
-        if hasattr(ctx.expr(), 'INT'):
+        if hasattr(ctx.expr(), "INT"):
             # # banner(' expr INT ', False)
 
             # # Tipo expr
@@ -265,11 +280,13 @@ class yaplVisitor(ParseTreeVisitor):
             tipo_expr_14_15_16 = self.visit(ctx.expr())
 
             if ctx.formal().TYPE().getText() != tipo_expr_14_15_16:
-                self.errores.append(f'>> Intento de asignación incorrecto: {self.visit(ctx.expr())} a {ctx.formal().TYPE().getText()}')
+                self.errores.append(
+                    f">> Intento de asignación incorrecto: {self.visit(ctx.expr())} a {ctx.formal().TYPE().getText()}"
+                )
 
         # TODO: Visitando expr:16 STRING
 
-        if hasattr(ctx.expr(), 'STRING'):
+        if hasattr(ctx.expr(), "STRING"):
             # # banner(' expr STRING ', False)
 
             # # Tipo expr
@@ -281,7 +298,9 @@ class yaplVisitor(ParseTreeVisitor):
             tipo_expr_14_15_16 = self.visit(ctx.expr())
 
             if ctx.formal().TYPE().getText() != tipo_expr_14_15_16:
-                self.errores.append(f'>> Intento de asignación incorrecto: {self.visit(ctx.expr())} a {ctx.formal().TYPE().getText()}')
+                self.errores.append(
+                    f">> Intento de asignación incorrecto: {self.visit(ctx.expr())} a {ctx.formal().TYPE().getText()}"
+                )
 
         # TODO: Visitando expr:17 BOOlEAN
 
@@ -298,7 +317,6 @@ class yaplVisitor(ParseTreeVisitor):
 
         #     if ctx.formal().TYPE().getText() != tipo_expr_14_15_16:
         #         self.errores.append(f'>> Intento de asignación incorrecto: {self.visit(ctx.expr())} a {ctx.formal().TYPE().getText()}')
-
 
         # try:
         #     tipo_expr_14_15_16 = ''
@@ -348,13 +366,12 @@ class yaplVisitor(ParseTreeVisitor):
         # )
         return self.visitChildren(ctx)
 
-
     """ Visita una inicializacion de variable ( Nombre : Tipo ) """
 
     # * Inicializacion de una variable (Independientemente de donde)
     # * Va a la tabla
     # Visit a parse tree produced by yaplParser#asignacion.
-    def visitAsignacion(self, ctx:yaplParser.AsignacionContext):
+    def visitAsignacion(self, ctx: yaplParser.AsignacionContext):
         # # # print(f"visitando  {ctx.ID().getText()} {ctx.TYPE().getText()} ")
         # # # print(self.scope)
         # # # print(self.metodo_scope)
@@ -372,11 +389,11 @@ class yaplVisitor(ParseTreeVisitor):
         """ Tamaño """
 
         tamanio = 0
-        if ctx.TYPE().getText() == 'Int':
+        if ctx.TYPE().getText() == "Int":
             tamanio = 4
-        if ctx.TYPE().getText() == 'String':
+        if ctx.TYPE().getText() == "String":
             tamanio = 8
-        if ctx.TYPE().getText() == 'Boolean':
+        if ctx.TYPE().getText() == "Boolean":
             tamanio = 2
 
         """ Offset """
@@ -384,11 +401,11 @@ class yaplVisitor(ParseTreeVisitor):
         partners = []
         offset = 0
         if len(relative_scope) == 1:
-            self.tabla.fila(self.scope[-1], 'self').inside.append(ctx.ID().getText())
+            self.tabla.fila(self.scope[-1], "self").inside.append(ctx.ID().getText())
             # for x in self.tabla.table:
             #     # print(x)
             #     # print('')
-            partners = self.tabla.fila(self.scope[-1], 'self').inside
+            partners = self.tabla.fila(self.scope[-1], "self").inside
 
             if len(partners) == 1:
                 offset = 0
@@ -397,11 +414,10 @@ class yaplVisitor(ParseTreeVisitor):
                     # # print(x)
                     offset += self.tabla.fila(x, [self.scope[-1]]).tamanio
 
-
-
-
         if len(relative_scope) > 1:
-            self.tabla.fila(relative_scope[-1], relative_scope[-2]).inside.append(ctx.ID().getText())
+            self.tabla.fila(relative_scope[-1], relative_scope[-2]).inside.append(
+                ctx.ID().getText()
+            )
             partners = self.tabla.fila(relative_scope[-1], relative_scope[-2]).inside
             # for x in self.tabla.table:
             #     # print(x)
@@ -419,15 +435,13 @@ class yaplVisitor(ParseTreeVisitor):
             ctx.TYPE().getText(),
             ctx.ID().getText(),
             None,
-            'local',
+            "local",
             tamanio,
             relative_scope,
             [],
             [],
-            offset
+            offset,
         )
-
-
 
         # try:
         #     # # print("Contexto variable")
@@ -448,108 +462,188 @@ class yaplVisitor(ParseTreeVisitor):
         #     # # print(ctx.ID().getText())
         return self.visitChildren(ctx)
 
-
     # Visit a parse tree produced by yaplParser#new.
-    def visitNew(self, ctx:yaplParser.NewContext):
+    def visitNew(self, ctx: yaplParser.NewContext):
         return self.visitChildren(ctx)
-
 
     # Visit a parse tree produced by yaplParser#parentheses.
-    def visitParentheses(self, ctx:yaplParser.ParenthesesContext):
+    def visitParentheses(self, ctx: yaplParser.ParenthesesContext):
         return self.visitChildren(ctx)
-
 
     # Visit a parse tree produced by yaplParser#letIn.
-    def visitLetIn(self, ctx:yaplParser.LetInContext):
+    def visitLetIn(self, ctx: yaplParser.LetInContext):
         return self.visitChildren(ctx)
-
 
     # Visit a parse tree produced by yaplParser#string.
-    def visitString(self, ctx:yaplParser.StringContext):
-        return 'String'
-
+    def visitString(self, ctx: yaplParser.StringContext):
+        return "String"
 
     # Visit a parse tree produced by yaplParser#arithmetic1.
-    def visitArithmetic1(self, ctx:yaplParser.Arithmetic1Context):
+    def visitArithmetic1(self, ctx: yaplParser.Arithmetic1Context):
 
         return self.visitChildren(ctx)
 
+    def visitArithmetic2(self, ctx: yaplParser.Arithmetic2Context):
+        left_type, _ = self.visit(ctx.expr(0))
+        right_type, _ = self.visit(ctx.expr(1))
+
+        if ctx.op.type == yaplParser.PLUS:
+            if left_type == "Int" and right_type == "Int":
+                return "Int", None
+            elif left_type == "String" or right_type == "String":
+                return "String", None
+            else:
+                self.errores.append(
+                    f"Invalid addition operation: {left_type} + {right_type}"
+                )
+                return "Error", None
+        elif ctx.op.type == yaplParser.MINUS:
+            if left_type == "Int" and right_type == "Int":
+                return "Int", None
+            else:
+                self.errores.append(
+                    f"Invalid subtraction operation: {left_type} - {right_type}"
+                )
+                return "Error", None
+        elif ctx.op.type == yaplParser.MULTIPLY:
+            if left_type == "Int" and right_type == "Int":
+                return "Int", None
+            elif (left_type == "Int" and right_type == "String") or (
+                left_type == "String" and right_type == "Int"
+            ):
+                return "String", None
+            else:
+                self.errores.append(
+                    f"Invalid multiplication operation: {left_type} * {right_type}"
+                )
+                return "Error", None
+        elif ctx.op.type == yaplParser.DIVIDE:
+            if left_type == "Int" and right_type == "Int":
+                return "Int", None
+            else:
+                self.errores.append(
+                    f"Invalid division operation: {left_type} / {right_type}"
+                )
+                return "Error", None
+        else:
+            self.errores.append(f"Invalid arithmetic operation: {ctx.op.text}")
+            return "Error", None
 
     # Visit a parse tree produced by yaplParser#isvoid.
-    def visitIsvoid(self, ctx:yaplParser.IsvoidContext):
-        return self.visitChildren(ctx)
-
+    def visitIsvoid(self, ctx: yaplParser.IsvoidContext):
+        expr_type, _ = self.visit(ctx.expr())
+        return "Boolean", None
 
     # Visit a parse tree produced by yaplParser#assignment.
-    def visitAssignment(self, ctx:yaplParser.AssignmentContext):
-        return self.visitChildren(ctx)
+    def visitAssignment(self, ctx: yaplParser.AssignmentContext):
+        var_name = ctx.ID().getText()
+        expr_type, _ = self.visit(ctx.expr())
 
+        symbol = self.tabla.find_symbol(var_name, self.scope)
+        if symbol:
+            if expr_type != symbol["tipo"]:
+                self.errores.append(
+                    f"Type mismatch in assignment: {var_name} has type {symbol['tipo']}, but expression has type {expr_type}"
+                )
+        else:
+            self.errores.append(f"Undeclared variable: {var_name}")
 
-    # Visit a parse tree produced by yaplParser#arithmetic2.
-    def visitArithmetic2(self, ctx:yaplParser.Arithmetic2Context):
-
-        # left_type, valuel = self.visit(ctx.expr(0))
-        # right_type, value2 = self.visit(ctx.expr(1))
-        # # # print(left_type, valuel)
-        # # # # print(left_type[1])
-
-        return self.visitChildren(ctx)
+        return None, None
 
     # Visit a parse tree produced by yaplParser#while.
-    def visitWhile(self, ctx:yaplParser.WhileContext):
+    def visitWhile(self, ctx: yaplParser.WhileContext):
         return self.visitChildren(ctx)
-
 
     # Visit a parse tree produced by yaplParser#int.
-    def visitInt(self, ctx:yaplParser.IntContext):
-        return 'Int'
-
+    def visitInt(self, ctx: yaplParser.IntContext):
+        return "Int"
 
     # Visit a parse tree produced by yaplParser#dispatchImplicitB.
-    def visitDispatchImplicitB(self, ctx:yaplParser.DispatchImplicitBContext):
-        return self.visitChildren(ctx)
+    def visitDispatchImplicitB(self, ctx: yaplParser.DispatchImplicitBContext):
+        method_name = ctx.ID().getText()
+        method_type = self.tabla.find_method_type("self", method_name)
 
+        if not method_type:
+            self.errores.append(f"Method {method_name} not found in type self")
+            return "Error", None
+
+        return method_type, None
 
     # Visit a parse tree produced by yaplParser#negative.
-    def visitNegative(self, ctx:yaplParser.NegativeContext):
+    def visitNegative(self, ctx: yaplParser.NegativeContext):
         return self.visitChildren(ctx)
-
 
     # Visit a parse tree produced by yaplParser#boolNot.
-    def visitBoolNot(self, ctx:yaplParser.BoolNotContext):
-        return self.visitChildren(ctx)
-
+    def visitBoolNot(self, ctx: yaplParser.BoolNotContext):
+        expr_type, _ = self.visit(ctx.expr())
+        if expr_type == "Boolean":
+            return "Boolean", None
+        else:
+            self.errores.append(f"Invalid 'not' operation: not {expr_type}")
+            return "Error", None
 
     # Visit a parse tree produced by yaplParser#boolean.
-    def visitBoolean(self, ctx:yaplParser.BooleanContext):
-        return 'Boolean'
-
+    def visitBoolean(self, ctx: yaplParser.BooleanContext):
+        return "Boolean"
 
     # Visit a parse tree produced by yaplParser#block.
-    def visitBlock(self, ctx:yaplParser.BlockContext):
-        return self.visitChildren(ctx)
+    def visitBlock(self, ctx: yaplParser.BlockContext):
+        result_type = None
 
+        for expr in ctx.expr():
+            expr_type, _ = self.visit(expr)
+            result_type = expr_type
+
+        return result_type, None
 
     # Visit a parse tree produced by yaplParser#comparisson.
-    def visitComparisson(self, ctx:yaplParser.ComparissonContext):
-        return self.visitChildren(ctx)
+    def visitComparisson(self, ctx: yaplParser.ComparissonContext):
+        left_type, _ = self.visit(ctx.expr(0))
+        right_type, _ = self.visit(ctx.expr(1))
 
+        if ctx.op.type == yaplParser.EQUALS:
+            if (
+                (left_type == "Int" and right_type == "Int")
+                or (left_type == "String" and right_type == "String")
+                or (left_type == "Boolean" and right_type == "Boolean")
+            ):
+                return "Boolean", None
+            else:
+                self.errores.append(
+                    f"Invalid equals operation: {left_type} = {right_type}"
+                )
+                return "Error", None
+        elif ctx.op.type == yaplParser.LESS_THAN:
+            if left_type == "Int" and right_type == "Int":
+                return "Boolean", None
+            else:
+                self.errores.append(
+                    f"Invalid less than operation: {left_type} < {right_type}"
+                )
+                return "Error", None
+        else:
+            self.errores.append(f"Invalid comparison operation: {ctx.op.text}")
+            return "Error", None
 
     # Visit a parse tree produced by yaplParser#id.
-    def visitId(self, ctx:yaplParser.IdContext):
-        return 'Id', ctx.ID().getText()
-
-
+    def visitId(self, ctx: yaplParser.IdContext):
+        return "Id", ctx.ID().getText()
 
     # Visit a parse tree produced by yaplParser#if.
-    def visitIf(self, ctx:yaplParser.IfContext):
+    def visitIf(self, ctx: yaplParser.IfContext):
         return self.visitChildren(ctx)
-
-
 
     # Visit a parse tree produced by yaplParser#dispatchExplicitA.
-    def visitDispatchExplicitA(self, ctx:yaplParser.DispatchExplicitAContext):
-        return self.visitChildren(ctx)
+    def visitDispatchExplicitA(self, ctx: yaplParser.DispatchExplicitAContext):
+        object_type, _ = self.visit(ctx.expr(0))
+        method_name = ctx.ID().getText()
+        method_type = self.tabla.find_method_type(object_type, method_name)
+
+        if not method_type:
+            self.errores.append(f"Method {method_name} not found in type {object_type}")
+            return "Error", None
+
+        return method_type, None
 
     # """ Parte que permite la comparacion de tipos """
     # def check_binary_operation(self, left_type, right_type, operation):
