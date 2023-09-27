@@ -93,7 +93,17 @@ class TerminalApp:
 
         visitor = yaplVisitor()
         visitor_result = visitor.visit(tree)
+        for code in visitor_result.three_address_code:
+            self.output_text.insert(tk.END, str(code) + "\n")
         visitor.tabla.show_rows()
+
+    def show_three_address_code(self):
+        tac = self.get_tac_from_output_text()
+        self.tac_text.delete("1.0", tk.END)
+        self.tac_text.insert(tk.END, tac)
+
+    def get_three_address_code_from_output_text(self):
+        return self.output_text.get("1.0", "end-1c")
 
     def execute_command(self):
 
