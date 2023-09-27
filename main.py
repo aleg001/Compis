@@ -68,10 +68,18 @@ class TerminalApp:
             bg="black",
             fg="white",
         )
+        self.show_tac_button = tk.Button(
+            button_frame,
+            text="Mostrar Three-Address Code",
+            command=self.show_three_address_code,
+            bg="black",
+            fg="white",
+        )
 
         self.execute_button.pack(side="top", padx=10, pady=5)
         self.clear_button.pack(side="top", padx=10, pady=5)
         self.show_table_button.pack(side="top", padx=10, pady=5)
+        self.show_tac_button.pack(side="top", padx=10, pady=5)
 
         button_frame.grid(row=0, column=2, padx=10, pady=10, rowspan=2)
 
@@ -98,7 +106,7 @@ class TerminalApp:
         visitor.tabla.show_rows()
 
     def show_three_address_code(self):
-        tac = self.get_tac_from_output_text()
+        tac = self.get_three_address_code_from_output_text()
         self.tac_text.delete("1.0", tk.END)
         self.tac_text.insert(tk.END, tac)
 
