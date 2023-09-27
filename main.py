@@ -1,4 +1,3 @@
-
 import subprocess
 from antlr4 import *
 from antlr_files.yaplLexer import yaplLexer
@@ -27,16 +26,48 @@ class TerminalApp:
         self.create_widgets()
 
     def create_widgets(self):
-        self.input_text = tk.Text(self.root, height=30, width=50, bg="black", fg="white", insertbackground="white")
-        self.output_text = tk.Text(self.root, height=30, width=30, bg="gray", fg="red", insertbackground="white")
+        self.input_text = tk.Text(
+            self.root,
+            height=30,
+            width=50,
+            bg="black",
+            fg="white",
+            insertbackground="white",
+        )
+        self.output_text = tk.Text(
+            self.root,
+            height=30,
+            width=30,
+            bg="gray",
+            fg="red",
+            insertbackground="white",
+        )
 
         self.input_text.grid(row=0, column=0, padx=10, pady=10, rowspan=2)
         self.output_text.grid(row=0, column=1, padx=10, pady=10, rowspan=2)
 
         button_frame = tk.Frame(self.root, bg="#0D2844")
-        self.execute_button = tk.Button(button_frame, text="Ejecutar", command=self.execute_command, bg="black", fg="white")
-        self.clear_button = tk.Button(button_frame, text="Limpiar", command=self.clear_output, bg="black", fg="white")
-        self.show_table_button = tk.Button(button_frame, text="Mostrar Tabla", command=self.show_table, bg="black", fg="white")
+        self.execute_button = tk.Button(
+            button_frame,
+            text="Ejecutar",
+            command=self.execute_command,
+            bg="black",
+            fg="white",
+        )
+        self.clear_button = tk.Button(
+            button_frame,
+            text="Limpiar",
+            command=self.clear_output,
+            bg="black",
+            fg="white",
+        )
+        self.show_table_button = tk.Button(
+            button_frame,
+            text="Mostrar Tabla",
+            command=self.show_table,
+            bg="black",
+            fg="white",
+        )
 
         self.execute_button.pack(side="top", padx=10, pady=5)
         self.clear_button.pack(side="top", padx=10, pady=5)
@@ -44,9 +75,9 @@ class TerminalApp:
 
         button_frame.grid(row=0, column=2, padx=10, pady=10, rowspan=2)
 
-    # def sho
+    # def show table
     def show_table(self):
-        input_stream = FileStream('./input.txt')
+        input_stream = FileStream("./input.txt")
         lexer = yaplLexer(input_stream)
 
         tokens = CommonTokenStream(lexer)
@@ -72,11 +103,16 @@ class TerminalApp:
         with open("input.txt", "w") as file:
             file.write(user_input)
 
-        process = subprocess.Popen(['antlr4-parse', './antlr_files/yapl.g4', 'program', '-gui'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        with open('input.txt', "r") as file:
+        process = subprocess.Popen(
+            ["antlr4-parse", "./antlr_files/yapl.g4", "program", "-gui"],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        with open("input.txt", "r") as file:
             insertion_of_user = file.read()
 
-        input_stream = FileStream('./input.txt')
+        input_stream = FileStream("./input.txt")
         lexer = yaplLexer(input_stream)
 
         tokens = CommonTokenStream(lexer)
@@ -99,7 +135,7 @@ class TerminalApp:
         for x in visitor.errores:
             self.output_text.insert(tk.END, x + "\n\n")
 
-        process.communicate(input=insertion_of_user.encode('utf-8'))
+        process.communicate(input=insertion_of_user.encode("utf-8"))
 
     def clear_output(self):
         self.input_text.delete("1.0", tk.END)
@@ -110,6 +146,7 @@ def main():
     root = tk.Tk()
     app = TerminalApp(root)
     root.mainloop()
+
 
 if __name__ == "__main__":
     main()

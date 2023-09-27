@@ -1,5 +1,7 @@
 # Generated from yapl.g4 by ANTLR 4.13.0
 from antlr4 import *
+from three_address_code import *
+
 
 if "." in __name__:
     from antlr_files.yaplParser import yaplParser
@@ -19,7 +21,19 @@ class yaplVisitor(ParseTreeVisitor):
         self.metodo_scope = []
         self.inherits = []
         self.tabla = Table()
+        self.three_address_code = []
         # # # print("Que onda desde el root")
+
+    def visitBinaryOperation(self, ctx):
+        left_operand = self.visit(ctx.left)
+        right_operand = self.visit(ctx.right)
+        result_variable = self.create_temp_variable()
+        op = ctx.op.text
+        code = generate_binary_operation_code(
+            op, result_variable, left_operand, right_operand
+        )
+        self.three_address_code.append(code)
+        return result_variable
 
     """ Agrupacion de todas las clases """
 
@@ -538,7 +552,8 @@ class yaplVisitor(ParseTreeVisitor):
     def visitAssignment(self, ctx: yaplParser.AssignmentContext):
         var_name = ctx.ID().getText()
         expr_type, _ = self.visit(ctx.expr())
-
+        code = generate_assignment_code(var_name, expr_type)
+        self.three_address_code.append(code)
         symbol = self.tabla.find_symbol(var_name, self.scope)
         if symbol:
             if expr_type != symbol["tipo"]:
