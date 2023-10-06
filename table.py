@@ -36,6 +36,21 @@ class Table:
 
         return None
 
+    def aumentar(self, nombre, scope, aumento):
+        for fila in self.table:
+            if fila.nombre == nombre and fila.scope == scope:
+                # return fila
+                fila.tamanio += aumento
+        # return None
+
+    def in_scope(self, particulare_scope):
+        filas = []
+        for fila in self.table:
+            if fila.scope == particulare_scope:
+                filas.append(fila)
+
+        return filas
+
     def lista_a_string_con_saltos_de_linea(self, lista):
         resultado = " ".join(lista)
         return resultado
@@ -120,10 +135,6 @@ class Row:
         self.parametros = parametros
         self.offset = offset
 
-        self.memory_address = None
-        self.label = None
-        self.temp_register = None
-
     def __str__(self):
         return (
             f"Tipo: {self.tipo} "
@@ -134,7 +145,4 @@ class Row:
             f"Scope: {self.scope} "
             f"Inside: {self.inside} "
             f"Parámetros: {self.parametros}"
-            f"Dirección de Memoria: {self.memory_address} "
-            f"Etiqueta: {self.label} "
-            f"Registro Temporal: {self.temp_register}"
         )

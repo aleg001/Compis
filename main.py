@@ -4,7 +4,7 @@ from antlr_files.yaplLexer import yaplLexer
 from antlr_files.yaplParser import yaplParser
 from antlr_files.yaplListener import yaplListener
 from antlr4.error.ErrorListener import ErrorListener
-from visitor import yaplVisitor
+from Visitor import yaplVisitor
 
 import tkinter as tk
 
@@ -99,6 +99,7 @@ class TerminalApp:
 
         tree = parser.program()
 
+        global visitor
         visitor = yaplVisitor()
         visitor_result = visitor.visit(tree)
         for code in visitor_result.three_address_code:
@@ -106,27 +107,35 @@ class TerminalApp:
         visitor.tabla.show_rows()
 
     def show_three_address_code(self):
-        tac = self.get_three_address_code_from_output_text()
-        self.tac_text.delete("1.0", tk.END)
-        self.tac_text.insert(tk.END, tac)
+        tac = visitor.get_tac()
+        for instruction in tac:
+            print(instruction)
 
     def get_three_address_code_from_output_text(self):
         return self.output_text.get("1.0", "end-1c")
 
     def execute_command(self):
-
         # user input
         user_input = self.input_text.get("1.0", "end-1c")
 
         with open("input.txt", "w") as file:
             file.write(user_input)
-
         process = subprocess.Popen(
-            ["antlr4-parse", "./antlr_files/yapl.g4", "program", "-gui"],
+            [
+                "java",
+                "-Xmx500M",
+                "-cp",
+                "/usr/local/lib/antlr-4.13.1-complete.jar:$CLASSPATH",
+                "org.antlr.v4.Tool",
+                "./antlr_files/yapl.g4",
+                "program",
+                "-gui",
+            ],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         )
+
         with open("input.txt", "r") as file:
             insertion_of_user = file.read()
 
