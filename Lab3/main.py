@@ -4,8 +4,8 @@ from antlr_files.yaplLexer import yaplLexer
 from antlr_files.yaplParser import yaplParser
 from antlr_files.yaplListener import yaplListener
 from antlr4.error.ErrorListener import ErrorListener
-from Visitor import yaplVisitor
-
+from Visitor_v2 import yaplVisitor
+from MIPS import *
 import tkinter as tk
 
 
@@ -68,22 +68,13 @@ class TerminalApp:
             bg="black",
             fg="white",
         )
-        self.show_tac_button = tk.Button(
-            button_frame,
-            text="Mostrar Three-Address Code",
-            command=self.show_three_address_code,
-            bg="black",
-            fg="white",
-        )
 
         self.execute_button.pack(side="top", padx=10, pady=5)
         self.clear_button.pack(side="top", padx=10, pady=5)
         self.show_table_button.pack(side="top", padx=10, pady=5)
-        self.show_tac_button.pack(side="top", padx=10, pady=5)
 
         button_frame.grid(row=0, column=2, padx=10, pady=10, rowspan=2)
 
-    # def show table
     def show_table(self):
         input_stream = FileStream("./input.txt")
         lexer = yaplLexer(input_stream)
@@ -99,23 +90,25 @@ class TerminalApp:
 
         tree = parser.program()
 
-        global visitor
         visitor = yaplVisitor()
         visitor_result = visitor.visit(tree)
-        for code in visitor_result.three_address_code:
-            self.output_text.insert(tk.END, str(code) + "\n")
         visitor.tabla.show_rows()
 
-    def show_three_address_code(self):
-        tac = visitor.get_tac()
-        for instruction in tac:
-            print(instruction)
-
-    def get_three_address_code_from_output_text(self):
-        return self.output_text.get("1.0", "end-1c")
-
     def execute_command(self):
+
         # user input
+        # user_input = self.input_text.get("1.0", "end-1c")
+
+        # with open("input.txt", "w") as file:
+        #     file.write(user_input)
+        """
+        process = subprocess.Popen(
+            ["antlr4-parse", "./antlr_files/yapl.g4", "program", "-gui"],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )"""
+
         user_input = self.input_text.get("1.0", "end-1c")
 
         with open("input.txt", "w") as file:
@@ -153,14 +146,32 @@ class TerminalApp:
 
         tree = parser.program()
 
-        visitor = yaplVisitor()
-        visitor_result = visitor.visit(tree)
+        visitor_1 = yaplVisitor()
+        visitor_result = visitor_1.visit(tree)
+
+        visitor_2 = yaplVisitor(visitor_1.tabla)
+        codigo_intermedio = visitor_2.visit(tree)
+
+        print(visitor_2.desarrollo)
 
         for x in error_listener.errors:
             self.output_text.insert(tk.END, x + "\n\n")
 
-        for x in visitor.errores:
+        for x in visitor_1.errores:
             self.output_text.insert(tk.END, x + "\n\n")
+
+        MIPSCodigo = parse_icr(visitor_2.desarrollo)
+
+        print("---------------------")
+        print("Traducción a MIPS")
+
+        for line in MIPSCodigo:
+            if isinstance(line, list):
+                for subline in line:
+                    print(subline)
+                print()
+            else:
+                print(line)
 
         process.communicate(input=insertion_of_user.encode("utf-8"))
 

@@ -1,0 +1,141 @@
+DECLARE CLASS Factorial
+
+    b   EQUAL TO        fp[0]
+    fp[0] = 123
+    c   EQUAL TO        fp[4]
+    fp[4] = 321
+    a   EQUAL TO        fp[8]
+    t0 = fp[0] * 9
+    t1 = t0 - 5
+    t2 = t1 + fp[4]
+    fp[8] = t2
+
+    var EQUAL TO        fp[12]
+    fp[12] = 0
+
+    FUNCTION factorial
+
+        AS PARAMETER:
+
+        n       EQUAL TO        fp[0]
+
+        LET
+
+        f       EQUAL TO        fp[4]
+
+        IN
+
+
+        t0 VALIDATION fp[0] = 0
+
+
+        IF t0 GO TO THEN
+
+
+        THEN:
+
+        fp[4] = 0
+
+        ELSE:
+
+
+        NESTED IF
+
+
+        t0 VALIDATION fp[0] = 1
+
+
+        IF t0 GO TO THEN
+
+
+        THEN:
+
+        fp[4] = 1
+
+        ELSE:
+
+
+        t0 = fp[0] - 1
+        PUSHing t0
+        fp[4] = fp[0] * CALLING factorial POP LAST
+
+        FI
+
+
+DECLARE CLASS Fibonacci
+
+
+    FUNCTION fibonacci
+
+        AS PARAMETER:
+
+        n       EQUAL TO        fp[0]
+
+        LET
+
+        f       EQUAL TO        fp[4]
+
+        IN
+
+
+        t0 VALIDATION fp[0] = 1
+
+
+        IF t0 GO TO THEN
+
+
+        THEN:
+
+        fp[4] = 1
+
+        ELSE:
+
+
+        NESTED IF
+
+
+        t0 VALIDATION fp[0] = 2
+
+
+        IF t0 GO TO THEN
+
+
+        THEN:
+
+        fp[4] = 1
+
+        ELSE:
+
+
+        t0 = fp[0] - 1
+        PUSH t0
+
+        t0 = fp[0] - 2
+        PUSH t0
+        fp[4] = CALLING fibonacci POP LAST + CALLING fibonacci POP LAST
+
+        FI
+
+
+DECLARE CLASS Main
+
+    IMPORT FROM IO      ->      out_string
+    IMPORT FROM IO      ->      out_int
+    IMPORT FROM IO      ->      in_string
+    IMPORT FROM IO      ->      in_int
+
+    n   EQUAL TO        fp[0]
+    fp[0] = 10
+    facto       EQUAL TO        fp[4]
+    fibo        EQUAL TO        fp[20]
+
+    FUNCTION main
+        fp[4] = newFactorial
+        fp[20] = newFibonacci
+        t0 = fp[0]
+        PUSH t0
+        t0 = fp[20]
+        t1 = t0.fibonacci
+        PUSH t1 POP LAST
+        CALLING out_int POP LAST
+        self

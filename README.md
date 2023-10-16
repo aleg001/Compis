@@ -1,71 +1,60 @@
-# Investigación y propuesta de Código Intermedio para Proyecto de Compiladores 🚀
+# 🚀 Laboratorio #3: Generación de Código Ensamblador para YAPL 🛠️
 
-En un proyecto de compiladores, el código intermedio es una representación intermedia del programa fuente que facilita la optimización y la generación de código final. En este contexto, usaremos el **Three Address Code (TAC)** como estructura base para representar Turbo Assembler como código intermedio.
+## 📌 Introducción:
+En este laboratorio, hemos llevado a cabo la fase crucial de transformar el código intermedio (CI) en instrucciones de ensamblador MIPS, centrando nuestra atención en las expresiones aritméticas. Este README sirve como una guía para comprender el proceso, el código presentado y su correlación con las tareas dadas.
+La sección A del laboratorio se encuentra completamente en el PDF y los ejemplos de traducciones de la parte B también se encuentran dentro del archivo PDF.
 
-## Three Address Code (TAC) 🌟
+---
 
-El TAC es una notación intermedia que utiliza operaciones de tres direcciones para representar instrucciones de manera simple y uniforme. Cada instrucción TAC consta de tres partes:
+## 📚 Índice:
 
-1. **Operador**: Representa la operación a realizar (por ejemplo, suma, resta, asignación, salto condicional, etc.).
-2. **Operando 1**: El primer operando de la operación.
-3. **Operando 2**: El segundo operando de la operación.
+1. [Análisis del Código en YAPL](#analisis)
+2. [Proceso de Traducción](#traduccion)
+3. [Resultados y Output](#resultados)
+4. [Conclusiones](#conclusiones)
 
-El TAC es especialmente útil para simplificar la generación de código y las optimizaciones. Aquí tienes un ejemplo de cómo funciona:
+---
 
-```plaintext
-TAC:              Ejemplo:
+## 🧩 <a name="analisis"></a>Análisis del Código en YAPL:
 
-1.   =            temp1 = a + b
-2.   +            temp2 = temp1 * c
-3.   *            result = temp2
-```
+🔎 **Input YAPL de ejemplo**:
+El código proporcionado en YAPL consiste en una clase que hereda de IO. Esta clase, `Main`, contiene tres métodos:
+- `main()`: Invoca las funciones `add` y `divide`, pasando los números y mostrando los resultados.
+- `add(x, y)`: Suma los dos valores pasados.
+- `divide(a, b)`: Divide el valor `a` entre el valor `b`.
 
-En este ejemplo, las tres instrucciones TAC representan la evaluación de la expresión result = (a + b) * c. Cada instrucción se divide en tres partes, lo que facilita la traducción a código ensamblador o código de máquina.
+---
 
-## Implementación del TAC en un Compilador 🛠️
+## 🔄 <a name="traduccion"></a>Proceso de Traducción:
 
-Para implementar el TAC en un compilador, puedes utilizar una estructura de datos de lista (por ejemplo, una lista enlazada o un arreglo) para almacenar cada instrucción TAC. Cada nodo o elemento de la lista contendrá el operador y sus operandos correspondientes.
+📜 **Código Intermedio (CI)**:
+Basándonos en el código en YAPL, generamos un código intermedio (CI) que actúa como una representación más baja del código original, facilitando la transición hacia el código ensamblador.
 
-## Ejemplos de TAC para Instrucciones Gramaticales 📝
+🔗 **Conexión con MIPS**:
+El CI se traduce directamente a instrucciones MIPS. Las operaciones aritméticas, en particular la suma y la división, son esenciales en este proceso. La traducción considera la gestión de la pila, el paso de parámetros y la invocación de funciones.
 
-### Asignación:
+---
 
-TAC:              Ejemplo:
+## 🖨️ <a name="resultados"></a>Resultados y Output:
 
-1.   =            x = 5
+🖥️ **Código Ensamblador MIPS**:
+El output generado en MIPS refleja las operaciones aritméticas, las invocaciones de función y las operaciones de stack apropiadas. Es importante notar que, aunque el código MIPS generado cumple con los requerimientos, no está optimizado para ejecución real.
 
-### Suma:
+📊 **Ejemplos y Pruebas**:
+Para verificar la validez del código MIPS, es vital realizar pruebas con diferentes entradas. Aunque este README no proporciona estas pruebas, se recomienda revisar el código y realizar simulaciones para garantizar su correcta traducción.
 
-TAC:              Ejemplo:
+---
 
-1.   + temp1 = a + b
-  
-### If-Else:
+## 🎯 <a name="conclusiones"></a>Conclusiones:
 
-TAC:              Ejemplo:
+Este laboratorio resalta la importancia de cada fase en el proceso de compilación. La transición del código YAPL al código intermedio y, finalmente, al ensamblador MIPS, demuestra la complejidad y la precisión necesarias en la construcción de un compilador.
 
-1.   if           if a > b goto L1
-2.   =            x = 10
-3.   goto         goto L2
-4.   label        L1:
-5.   =            x = 20
-6.   label        L2:
+Es esencial entender cada paso, desde la sintaxis y semántica del lenguaje fuente hasta las peculiaridades del ensamblador objetivo, para generar un código preciso y eficiente.
 
+---
 
-### While:
+**¡Gracias por revisar este laboratorio! ¡Hasta la próxima entrega!** 🚀
 
-TAC:              Ejemplo:
-
-1.   label        L1:
-2.   if           if x > 0 goto L2
-3.   goto         goto L3
-4.   label        L2:
-5.   -   x = x - 1
-6.   goto         goto L1
-7.   label        L3:
-
-
-### Referencias Bibliográficas 📚
-
-Cooper, K. D., & Torczon, L. (2011). "Engineering a Compiler." Morgan Kaufmann.
-Aho, A. V., & Ullman, J. D. (1986). "Compilers: Principles, Techniques, and Tools." Addison-Wesley.
+Atentamente:
+- Alejandro Gómez
+- Gabriel Vicente

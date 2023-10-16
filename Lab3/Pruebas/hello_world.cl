@@ -1,5 +1,5 @@
 class Main inherits IO {
-   a:INT;
+   a:Int <- 102;
    main(): SELF_TYPE {
 	out_string("Hello, World.\n")
    };

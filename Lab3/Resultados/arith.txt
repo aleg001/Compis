@@ -1,0 +1,487 @@
+DECLARE CLASS A
+
+    var EQUAL TO        fp[0]
+    fp[0] = 0
+
+    FUNCTION value
+        fp[0]
+
+    FUNCTION set_var
+
+        AS PARAMETER:
+
+        num     EQUAL TO        fp[0]
+        fp[0] = fp[0]
+        self
+
+    FUNCTION method1
+
+        AS PARAMETER:
+
+        num     EQUAL TO        fp[0]
+        self
+
+    FUNCTION method2
+
+        AS PARAMETER:
+
+        num1    EQUAL TO        fp[0]
+
+        AS PARAMETER:
+
+        num2    EQUAL TO        fp[4]
+
+        LET
+
+        x       EQUAL TO        fp[8]
+
+        IN
+
+
+        t0 = num + 2
+        fp[8] = t0
+
+        t0 = fp[8]
+        PUSH t0
+        t0 = (newB)
+        t1 = t0.set_var
+        CALLING t1 POP 1
+
+    FUNCTION method3
+
+        AS PARAMETER:
+
+        num     EQUAL TO        fp[0]
+
+        LET
+
+        x       EQUAL TO        fp[4]
+
+        IN
+
+
+        t0 = fp[4]
+        PUSH t0
+        t0 = (newC)
+        t1 = t0.set_var
+        CALLING t1 POP 1
+
+    FUNCTION method4
+
+        AS PARAMETER:
+
+        num1    EQUAL TO        fp[0]
+
+        AS PARAMETER:
+
+        num2    EQUAL TO        fp[4]
+
+        t0 VALIDATION num < 1
+
+
+        IF t0 GO TO THEN
+
+
+        THEN:
+
+
+        ELSE:
+
+
+        LET
+
+        x       EQUAL TO        fp[8]
+
+        IN
+
+
+        t0 = num - 1
+        fp[8] = t0
+
+        t0 = fp[8]
+        PUSH t0
+        t0 = (newD)
+        t1 = t0.set_var
+        CALLING t1 POP 1
+19
+
+        FI
+
+
+        LET
+
+        x       EQUAL TO        fp[12]
+
+        IN
+
+
+        t0 = num - 2
+        fp[8] = t0
+
+        t0 = fp[8]
+        PUSH t0
+        t0 = (newD)
+        t1 = t0.set_var
+        CALLING t1 POP 1
+
+        LET
+
+        x       EQUAL TO        fp[16]
+
+        IN
+
+
+        t0 = num - 1
+        fp[8] = t0
+
+        t0 = fp[8]
+        PUSH t0
+        t0 = (newD)
+        t1 = t0.set_var
+        CALLING t1 POP 1
+
+    FUNCTION method5
+
+        AS PARAMETER:
+
+        num     EQUAL TO        fp[0]
+
+        LET
+
+        x       EQUAL TO        fp[4]
+
+        IN
+
+        t0 = fp[4]
+        PUSH t0
+        t0 = (newE)
+        t1 = t0.set_var
+        CALLING t1 POP 1
+
+        LET
+
+        y       EQUAL TO        fp[8]
+
+        IN
+
+
+DECLARE CLASS B
+
+    IMPORT FROM A       ->      value
+    IMPORT FROM A       ->      set_var
+    IMPORT FROM A       ->      method1
+    IMPORT FROM A       ->      method2
+    IMPORT FROM A       ->      method3
+    IMPORT FROM A       ->      method4
+    IMPORT FROM A       ->      method5
+
+
+    FUNCTION method5
+
+        AS PARAMETER:
+
+        num     EQUAL TO        fp[0]
+
+        LET
+
+        x       EQUAL TO        fp[4]
+
+        IN
+
+
+        t0 = fp[0] * fp[0]
+        fp[4] = t0
+
+        t0 = fp[4]
+        PUSH t0
+        t0 = (newE)
+        t1 = t0.set_var
+        CALLING t1 POP 1
+
+DECLARE CLASS C
+
+    IMPORT FROM B       ->      method5
+
+
+    FUNCTION method6
+
+        AS PARAMETER:
+
+        num     EQUAL TO        fp[0]
+
+        LET
+
+        x       EQUAL TO        fp[4]
+
+        IN
+
+
+        t0 = fp[4]
+        PUSH t0
+        t0 = (newA)
+        t1 = t0.set_var
+        CALLING t1 POP 1
+
+    FUNCTION method5
+
+        AS PARAMETER:
+
+        num     EQUAL TO        fp[0]
+
+        LET
+
+        x       EQUAL TO        fp[4]
+
+        IN
+
+
+        t0 = fp[0] * fp[0]
+
+        t1 = t0 * fp[0]
+        fp[4] = t1
+
+        t0 = fp[4]
+        PUSH t0
+        t0 = (newE)
+        t1 = t0.set_var
+        CALLING t1 POP 1
+
+DECLARE CLASS D
+
+    IMPORT FROM B       ->      method5
+
+
+    FUNCTION method7
+
+        AS PARAMETER:
+
+        num     EQUAL TO        fp[0]
+
+        LET
+
+        x       EQUAL TO        fp[4]
+
+        IN
+
+
+        t0 VALIDATION fp[4] < 0
+
+
+        IF t0 GO TO THEN
+
+
+        THEN:
+
+
+        ELSE:
+
+
+        NESTED IF
+
+
+        t0 VALIDATION 0 = fp[4]
+
+
+        IF t0 GO TO THEN
+
+
+        THEN:
+
+
+        ELSE:
+
+
+        NESTED IF
+
+
+        t0 VALIDATION 1 = fp[4]
+
+
+        IF t0 GO TO THEN
+
+
+        THEN:
+
+
+        ELSE:
+
+
+        NESTED IF
+
+
+        t0 VALIDATION 2 = fp[4]
+
+
+        IF t0 GO TO THEN
+
+
+        THEN:
+
+
+        ELSE:
+
+
+        FI
+
+
+DECLARE CLASS E
+
+    IMPORT FROM D       ->      method7
+
+
+    FUNCTION method6
+
+        AS PARAMETER:
+
+        num     EQUAL TO        fp[0]
+
+        LET
+
+        x       EQUAL TO        fp[4]
+
+        IN
+
+
+        t0 = fp[0] / 8
+        fp[4] = t0
+
+        t0 = fp[4]
+        PUSH t0
+        t0 = (newA)
+        t1 = t0.set_var
+        CALLING t1 POP 1
+
+DECLARE CLASS Main
+
+    IMPORT FROM IO      ->      out_string
+    IMPORT FROM IO      ->      out_int
+    IMPORT FROM IO      ->      in_string
+    IMPORT FROM IO      ->      in_int
+
+    char        EQUAL TO        fp[0]
+    avar        EQUAL TO        fp[8]
+    a_var       EQUAL TO        fp[24]
+    flag        EQUAL TO        fp[40]
+
+    FUNCTION is_even
+
+        AS PARAMETER:
+
+        num     EQUAL TO        fp[0]
+
+        LET
+
+        x       EQUAL TO        fp[4]
+
+        IN
+
+
+        t0 VALIDATION fp[4] < 0
+
+
+        IF t0 GO TO THEN
+
+
+        THEN:
+
+
+        ELSE:
+
+
+        NESTED IF
+
+
+        t0 VALIDATION 0 = fp[4]
+
+
+        IF t0 GO TO THEN
+
+
+        THEN:
+
+
+        ELSE:
+
+
+        NESTED IF
+
+
+        t0 VALIDATION 1 = fp[4]
+
+
+        IF t0 GO TO THEN
+
+
+        THEN:
+
+
+        ELSE:
+
+{'funcion': 'is_even', 'parametros': [<antlr_files.yaplParser.yaplParser.Arithmetic2Context object at 0x000002C796A2F610>]}
+
+        FI
+
+
+    FUNCTION main
+
+        t0 = 2
+        PUSH t0
+        t0 = fp[8]
+        t1 = t0.set_var
+        CALLING t1 POP LAST
+        t0 = fp[8]
+        t1 = t0.value
+        PUSH t1 POP LAST
+        CALLING out_int POP LAST
+        fp[24] = None
+        fp[8] = None
+        t0 = fp[8]
+        t1 = t0.value
+        PUSH t1 POP LAST
+        CALLING out_int POP LAST
+        t0 = "\n"
+        PUSH t0
+        CALLING out_string POP LAST
+        fp[8] = None
+        t0 = fp[8]
+        t1 = t0.value
+        PUSH t1 POP LAST
+        CALLING out_int POP LAST
+        t0 = "\n"
+        PUSH t0
+        CALLING out_string POP LAST
+        fp[24] = None
+        fp[8] = None
+        t0 = fp[8]
+        t1 = t0.value
+        PUSH t1 POP LAST
+        CALLING out_int POP LAST
+        t0 = "\n"
+        PUSH t0
+        CALLING out_string POP LAST
+        t0 = 5
+        PUSH t0
+        t0 = fp[8]
+        t1 = t0.set_var
+        CALLING t1 POP LAST
+        fp[8] = None
+        t0 = fp[8]
+        t1 = t0.value
+        PUSH t1 POP LAST
+        CALLING out_int POP LAST
+        t0 = "\n"
+        PUSH t0
+        CALLING out_string POP LAST
+        t0 = 6
+        PUSH t0
+        t0 = fp[8]
+        t1 = t0.set_var
+        CALLING t1 POP LAST
+        fp[8] = None
+        t0 = fp[8]
+        t1 = t0.value
+        PUSH t1 POP LAST
+        CALLING out_int POP LAST
+        t0 = "\n"
+        PUSH t0
+        CALLING out_string POP LAST

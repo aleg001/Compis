@@ -1,26 +1,16 @@
 import tkinter as tk
 from tkinter import ttk
 
-
 class Table:
     def __init__(self):
         self.table = []
 
-    def append_row(
-        self,
-        tipo,
-        nombre,
-        inherits,
-        campo,
-        tamanio,
-        scope,
-        inside,
-        parametros=[],
-        offset=None,
-    ):
-        fila = Row(
-            tipo, nombre, inherits, campo, tamanio, scope, inside, parametros, offset
-        )
+    def imprimiendo_tabla(self):
+        for row in self.table:
+            print(row)
+
+    def append_row(self,tipo,nombre, inherits, campo, tamanio, scope, inside, parametros=[], offset = None):
+        fila = Row(tipo,nombre, inherits, campo, tamanio, scope, inside, parametros, offset)
         self.table.append(fila)
 
     def is_in_table(self, nombre, scope):
@@ -35,6 +25,7 @@ class Table:
                 return fila
 
         return None
+
 
     def aumentar(self, nombre, scope, aumento):
         for fila in self.table:
@@ -52,7 +43,7 @@ class Table:
         return filas
 
     def lista_a_string_con_saltos_de_linea(self, lista):
-        resultado = " ".join(lista)
+        resultado = ' '.join(lista)
         return resultado
 
     def show_rows(self):
@@ -60,16 +51,7 @@ class Table:
         root.title("Tabla de Filas")
 
         tree = ttk.Treeview(root)
-        tree["columns"] = (
-            "Tipo",
-            "Nombre",
-            "Inherits",
-            "Campo",
-            "Tamaño",
-            "Scope",
-            "Inside",
-            "Offset",
-        )
+        tree["columns"] = ("Tipo", "Nombre", "Inherits", "Campo", "Tamaño", "Scope", "Inside", "Offset", "Parametros")
         tree.heading("#0", text="Índice")
         tree.heading("Tipo", text="Tipo")
         tree.heading("Nombre", text="Nombre")
@@ -78,8 +60,8 @@ class Table:
         tree.heading("Tamaño", text="Tamaño")
         tree.heading("Scope", text="Scope")
         tree.heading("Inside", text="Inside")
-        # tree.heading("Parametros", text="Parametros")
         tree.heading("Offset", text="Offset")
+        tree.heading("Parametros", text="Parametros")
 
         for idx, fila in enumerate(self.table, start=1):
             values = (
@@ -90,8 +72,8 @@ class Table:
                 fila.tamanio,
                 fila.scope,
                 fila.inside,
-                fila.offset
-                # fila.parametros
+                fila.offset,
+                fila.parametros
             )
             tree.insert("", "end", text=idx, values=values)
         # tree.configure(height=5*(max(len(x.inside) for x in self.table.inside)))
@@ -104,27 +86,14 @@ class Table:
         tree.column("Tamaño", width=100)
         tree.column("Scope", width=200)
         tree.column("Inside", width=300)
-        # tree.column("Parametros", width=300)
+        tree.column("Parametros", width=300)
         tree.column("Offset", width=200)
         tree.configure(height=40)
         tree.pack(fill="both", expand=True)
 
         root.mainloop()
-
-
 class Row:
-    def __init__(
-        self,
-        tipo,
-        nombre,
-        inherits,
-        campo,
-        tamanio,
-        scope,
-        inside,
-        parametros=[],
-        offset=None,
-    ):
+    def __init__(self,tipo, nombre, inherits, campo, tamanio, scope, inside, parametros = [], offset = None):
         self.tipo = tipo
         self.nombre = nombre
         self.inherits = inherits
@@ -134,15 +103,12 @@ class Row:
         self.inside = inside
         self.parametros = parametros
         self.offset = offset
-
     def __str__(self):
-        return (
-            f"Tipo: {self.tipo} "
-            f"Nombre: {self.nombre} "
-            f"Inherits: {self.inherits} "
-            f"Campo: {self.campo} "
-            f"Tamaño: {self.tamanio} "
-            f"Scope: {self.scope} "
-            f"Inside: {self.inside} "
-            f"Parámetros: {self.parametros}"
-        )
+        return (f"Tipo: {self.tipo} "
+                f"Nombre: {self.nombre} "
+                f"Inherits: {self.inherits} "
+                f"Campo: {self.campo} "
+                f"Tamaño: {self.tamanio} "
+                f"Scope: {self.scope} "
+                f"Inside: {self.inside} "
+                f"Parámetros: {self.parametros}")

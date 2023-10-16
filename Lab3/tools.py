@@ -1,6 +1,4 @@
 import re
-
-
 def are_lists_of_tuples_equal(list1, list2):
     if len(list1) != len(list2):
         return False
@@ -11,20 +9,18 @@ def are_lists_of_tuples_equal(list1, list2):
 
     return True
 
-
-def banner(header, row_jumps=False):
+def banner(header, row_jumps = False):
     print()
-    value = 120
+    value   = 120
     banner = "{:─^120}".format(header)
 
     print(f'{"─"*value}')
 
     if row_jumps:
-        print(f"\n{banner}\n")
+        print(f'\n{banner}\n')
     else:
-        print(f"{banner}")
+        print(f'{banner}')
     print(f'{"─"*value}\n')
-
 
 def contar_apariciones(texto, subcadena):
     """
@@ -39,27 +35,23 @@ def contar_apariciones(texto, subcadena):
     contador = texto.count(subcadena)
     return contador
 
-
 def infix_to_postfix(expression):
-    precedence = {"<": 1, "=": 1, "+": 1, "-": 1, "*": 2, "/": 2, "^": 3}
+    precedence = {'<': 1, '=': 1, '+': 1, '-': 1, '*': 2, '/': 2, '^': 3}
     output = []
     stack = []
 
     for token in expression:
-        if token not in "+-*/<=":
+        if token.isalnum():  # Verifica si el token es una letra o número
             output.append(token)
         elif token in "+-*/<=":
-            while (
-                stack
-                and stack[-1] in "+-*/<="
-                and precedence[token] <= precedence[stack[-1]]
-            ):
+            while (stack and stack[-1] != '(' and
+                    precedence.get(token, 0) <= precedence.get(stack[-1], 0)):
                 output.append(stack.pop())
             stack.append(token)
-        elif token == "(":
+        elif token == '(':
             stack.append(token)
-        elif token == ")":
-            while stack and stack[-1] != "(":
+        elif token == ')':
+            while stack and stack[-1] != '(':
                 output.append(stack.pop())
             stack.pop()  # Pop '('
 
@@ -72,13 +64,11 @@ def infix_to_postfix(expression):
 def is_operand(token):
     return token.isdigit()
 
-
 def generate_temp():
     global temp_count
-    temp_name = f"t{temp_count}"
+    temp_name = f't{temp_count}'
     temp_count += 1
     return temp_name
-
 
 def process_postfix(expression):
     stack = []
@@ -102,13 +92,3 @@ def process_postfix(expression):
             temp_assignments_arrays.append(operation2)
 
     return temp_assignments_arrays
-
-
-label_count = 0
-
-
-def generate_label():
-    global label_count
-    label_name = f"L{label_count}"
-    label_count += 1
-    return label_name

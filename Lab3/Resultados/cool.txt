@@ -1,0 +1,28 @@
+DECLARE CLASS Main
+
+    IMPORT FROM IO      ->      out_string
+    IMPORT FROM IO      ->      out_int
+    IMPORT FROM IO      ->      in_string
+    IMPORT FROM IO      ->      in_int
+
+
+    FUNCTION main
+        t0 = 4
+        PUSH t0
+        t0 = 1
+        PUSH t0
+        t0 = (newObject).type_name()
+        t1 = t0.substr
+        PUSH t1 POP 2
+        CALLING out_string POP LAST
+        t0 = 1
+        PUSH t0
+        t0 = 3
+        PUSH t0
+        t0 = (isvoidself).type_name()
+        t1 = t0.substr
+        PUSH t1 POP 2
+        CALLING out_string POP LAST
+        t0 = "\n"
+        PUSH t0
+        CALLING out_string POP LAST
