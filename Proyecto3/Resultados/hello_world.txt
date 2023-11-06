@@ -1,0 +1,14 @@
+DECLARE CLASS Main
+
+    IMPORT FROM IO      ->      out_string
+    IMPORT FROM IO      ->      out_int
+    IMPORT FROM IO      ->      in_string
+    IMPORT FROM IO      ->      in_int
+
+    a   EQUAL TO        fp[0]
+    fp[0] = 102
+
+    FUNCTION main
+        t0 = "Hello, World.\n"
+        PUSH t0
+        CALLING out_string POP LAST
