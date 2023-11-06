@@ -160,18 +160,7 @@ class TerminalApp:
         for x in visitor_1.errores:
             self.output_text.insert(tk.END, x + "\n\n")
 
-        MIPSCodigo = parse_icr(visitor_2.desarrollo)
-
-        print("---------------------")
-        print("Traducción a MIPS")
-
-        for line in MIPSCodigo:
-            if isinstance(line, list):
-                for subline in line:
-                    print(subline)
-                print()
-            else:
-                print(line)
+        MIPSCodigo = generate_mips(visitor_2.desarrollo)
 
         process.communicate(input=insertion_of_user.encode("utf-8"))
 

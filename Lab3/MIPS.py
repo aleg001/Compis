@@ -1,3 +1,9 @@
+# Declare the data section
+data_section = []
+# Keep track of the labels for strings to avoid duplicates
+string_labels = {}
+
+
 def parse_icr(icr):
     mips_output = []
     lines = icr.strip().split("\n")
@@ -10,94 +16,111 @@ def parse_icr(icr):
 
         if "DECLARE CLASS" in line:
             mips_output.append(declare_class(words[-1]))
-        elif "INIT" in line and len(words) > 2:
-            mips_output.append(init_block(words[2]))
-        elif "FINISHING" in line:
-            mips_output.append(finish_block())
-        elif "PUSHING" in line:
-            mips_output.append(pushing(words[1]))
-        elif "CALLING" in line and len(words) > 4:
-            mips_output.append(calling_function(words[1], int(words[3])))
-        
-        elif "out_string" in line:
-            string = line.split('"')[1]  
-            mips_output.extend(handle_out_string(string))
-        elif "out_int" in line:
-            integer = int(words[-1])
-            mips_output.extend(handle_out_int(integer))
-    
+
         elif "FUNCTION" in line:
-            mips_output.append(".globl {}".format(words[1]))  
-            mips_output.append("{}:".format(words[1]))
-            
-        elif "=" in line and ("+" in line or "/" in line):
-            result, _, operand1, op, operand2 = words[:5]
-            mips_output.extend(arithmetic_operation(result, operand1, op, operand2))
+            mips_output.append(f"{words[1]}:\n")
+
+        elif "FINISHING" in line:
+            mips_output.append(f"    li $v0, 10\n    syscall\n")
+        elif "PUSHING" in line:
+            string_to_push = line[line.find('"')+1:line.rfind('"')]
+            mips_output.append(pushing(string_to_push))
+        if "CALLING" in line:
+
+            if "out_string" in line and '"' in line:
+                string_to_print = line.split('"')[1]
+                mips_output.extend(handle_out_string(string_to_print))
+            else:
+
+                function_name = words[1]
+                num_args = int(words[3]) if len(words) > 3 else 0
+                mips_output.append(calling_function(function_name, num_args))
+
+        elif "=" in line and any(op in line for op in ["+", "/"]):
+            parts = line.split()
+            mips_output.append(arithmetic_operation(
+                parts[0], parts[2], parts[3], parts[4]))
 
     return mips_output
 
 
-
 def declare_class(name):
-    return f"\n# INIT class {name}\n"
+    return f"# INIT class {name}\n"
 
 
 def init_block(label):
-    return f"\n{label}:\n"
+    return f"{label}:\n"
 
 
 def finish_block():
-    return "\n# FIN bloque\n"
+    return "# FIN bloque\n"
 
 
-def pushing(value):
-    if isinstance(value, str) and value.startswith("t"):
-        return f"lw $sp, {value}\naddiu $sp, $sp, -4\n"
-    else:
-        return f"li $t0, {value}\nlw $sp, $t0\naddiu $sp, $sp, -4\n"
+def add_string_to_data_section(string):
+    if string not in string_labels:
+        label = f"str{len(string_labels)}"
+        data_section.append(f'{label}: .asciiz "{string}"')
+        string_labels[string] = label
+    return string_labels[string]
+
+
+def pushing(string):
+    label = add_string_to_data_section(string)
+    return f"    la $a0, {label}\n"
 
 
 def calling_function(name, num_args):
-    restore_sp = f"addiu $sp, $sp, {4*num_args}\n"
-    return f"jal {name}\n{restore_sp}"
+    return f"    jal {name}\n    addiu $sp, $sp, {num_args * 4}\n"
 
 
 def arithmetic_operation(result, operand1, op, operand2):
-    mips_instructions = []
     if op == "+":
-        mips_instructions.append(f"add {result}, {operand1}, {operand2} # Suma\n")
+        return f"    add {result}, {operand1}, {operand2}\n"
     elif op == "/":
-        mips_instructions.append(f"div {operand1}, {operand2} # División\n")
-        mips_instructions.append(f"mflo {result}\n")
-    return mips_instructions
+        return f"    div {operand1}, {operand2}\n    mflo {result}\n"
+    else:
+        return ""
 
 
 def system_call(service_code):
-    return [
-        'li $v0, {}'.format(service_code),  
-        'syscall'                           
-    ]
+    return f"    li $v0, {service_code}\n    syscall\n"
 
 
 def handle_out_string(string):
-    mips_instructions = []
-    string_label = "str{}".format(len(string))  
- 
-    mips_instructions.append('.data')
-    mips_instructions.append('{}: .asciiz {}'.format(string_label, string))
-    mips_instructions.append('.text')
-
-    mips_instructions.append('la $a0, {}'.format(string_label))
-
-    mips_instructions.extend(system_call(4))
-    return mips_instructions
+    label = add_string_to_data_section(string)
+    return [
+        f'    la $a0, {label}',
+        '    li $v0, 4',
+        '    syscall'
+    ]
 
 
 def handle_out_int(integer):
-    mips_instructions = [
-        'li $a0, {}'.format(integer),  
-    ]
- 
-    mips_instructions.extend(system_call(1))
-    return mips_instructions
+    return f"    li $a0, {integer}\n    {system_call(1)}"
 
+
+def system_call(service_code):
+    return f"    li $v0, {service_code}\n    syscall\n"
+
+
+def generate_mips(icr):
+    mips_output = []
+    parse_icr(icr)
+    mips_output.append('.data')
+    for entry in data_section:
+        mips_output.append(entry)
+    mips_output.append('\n.text')
+    mips_output.append('.globl main')
+    mips_output.append('main:')
+    mips_output.extend(parse_icr(icr))
+    mips_output.append('    li $v0, 10')
+    mips_output.append('    syscall')
+    mips_code = '\n'.join(mips_output)
+
+    print("\n--- MIPS CODE ---\n")
+    print(mips_code)
+
+    with open('output.asm', 'w') as mips_file:
+        mips_file.write(mips_code)
+
+    return mips_code

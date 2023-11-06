@@ -1,4 +1,6 @@
 import re
+
+
 def are_lists_of_tuples_equal(list1, list2):
     if len(list1) != len(list2):
         return False
@@ -9,9 +11,10 @@ def are_lists_of_tuples_equal(list1, list2):
 
     return True
 
-def banner(header, row_jumps = False):
+
+def banner(header, row_jumps=False):
     print()
-    value   = 120
+    value = 120
     banner = "{:─^120}".format(header)
 
     print(f'{"─"*value}')
@@ -21,6 +24,7 @@ def banner(header, row_jumps = False):
     else:
         print(f'{banner}')
     print(f'{"─"*value}\n')
+
 
 def contar_apariciones(texto, subcadena):
     """
@@ -34,6 +38,7 @@ def contar_apariciones(texto, subcadena):
     # Usamos el método count() para contar las apariciones de la subcadena en el texto.
     contador = texto.count(subcadena)
     return contador
+
 
 def infix_to_postfix(expression):
     precedence = {'<': 1, '=': 1, '+': 1, '-': 1, '*': 2, '/': 2, '^': 3}
@@ -64,11 +69,13 @@ def infix_to_postfix(expression):
 def is_operand(token):
     return token.isdigit()
 
+
 def generate_temp():
     global temp_count
     temp_name = f't{temp_count}'
     temp_count += 1
     return temp_name
+
 
 def process_postfix(expression):
     stack = []

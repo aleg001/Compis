@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 
+
 class Table:
     def __init__(self):
         self.table = []
@@ -9,8 +10,9 @@ class Table:
         for row in self.table:
             print(row)
 
-    def append_row(self,tipo,nombre, inherits, campo, tamanio, scope, inside, parametros=[], offset = None):
-        fila = Row(tipo,nombre, inherits, campo, tamanio, scope, inside, parametros, offset)
+    def append_row(self, tipo, nombre, inherits, campo, tamanio, scope, inside, parametros=[], offset=None):
+        fila = Row(tipo, nombre, inherits, campo, tamanio,
+                   scope, inside, parametros, offset)
         self.table.append(fila)
 
     def is_in_table(self, nombre, scope):
@@ -25,7 +27,6 @@ class Table:
                 return fila
 
         return None
-
 
     def aumentar(self, nombre, scope, aumento):
         for fila in self.table:
@@ -51,7 +52,8 @@ class Table:
         root.title("Tabla de Filas")
 
         tree = ttk.Treeview(root)
-        tree["columns"] = ("Tipo", "Nombre", "Inherits", "Campo", "Tamaño", "Scope", "Inside", "Offset", "Parametros")
+        tree["columns"] = ("Tipo", "Nombre", "Inherits", "Campo",
+                           "Tamaño", "Scope", "Inside", "Offset", "Parametros")
         tree.heading("#0", text="Índice")
         tree.heading("Tipo", text="Tipo")
         tree.heading("Nombre", text="Nombre")
@@ -92,8 +94,10 @@ class Table:
         tree.pack(fill="both", expand=True)
 
         root.mainloop()
+
+
 class Row:
-    def __init__(self,tipo, nombre, inherits, campo, tamanio, scope, inside, parametros = [], offset = None):
+    def __init__(self, tipo, nombre, inherits, campo, tamanio, scope, inside, parametros=[], offset=None):
         self.tipo = tipo
         self.nombre = nombre
         self.inherits = inherits
@@ -103,6 +107,7 @@ class Row:
         self.inside = inside
         self.parametros = parametros
         self.offset = offset
+
     def __str__(self):
         return (f"Tipo: {self.tipo} "
                 f"Nombre: {self.nombre} "
