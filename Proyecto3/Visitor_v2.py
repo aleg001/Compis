@@ -111,7 +111,7 @@ class yaplVisitor(ParseTreeVisitor):
 
             [self.visit(characteristic) for characteristic in ctx.feature()]
 
-            self.agregar_a_desarrollo(f"\n\nFINISHING {ctx.TYPE(0).getText()}")
+            self.agregar_a_desarrollo(f"\n\nFINISHING CLASS {ctx.TYPE(0).getText()}")
 
 
 
@@ -236,7 +236,7 @@ class yaplVisitor(ParseTreeVisitor):
                     scope           =   relative_scope
                 ).offset
 
-                self.agregar_a_desarrollo(f"\n    {ctx.formal().ID().getText()}\t\tEQUAL TO\tfp[{desplazamiento}]")
+                self.agregar_a_desarrollo(f"\n    {ctx.formal().TYPE().getText()} {ctx.formal().ID().getText()}\t\tEQUAL TO\tfp[{desplazamiento}]")
 
 
                 visiting_assignment = None
@@ -408,7 +408,7 @@ class yaplVisitor(ParseTreeVisitor):
                     ).offset
 
                     self.agregar_a_desarrollo(f"\n    AS PARAMETER")
-                    self.agregar_a_desarrollo(f"\n    {parameter.ID().getText()}\t\tEQUAL TO\tfp[{desplazamiento}]")
+                    self.agregar_a_desarrollo(f"\n    {parameter.TYPE().getText()} {parameter.ID().getText()}\t\tEQUAL TO\tfp[{desplazamiento}]")
             self.agregar_a_desarrollo(f"\n")
             from antlr_files.yaplParser import yaplParser as MiAlias
             if isinstance(ctx.expr(), MiAlias.IdContext) or isinstance(ctx.expr(), MiAlias.IntContext) or isinstance(ctx.expr(), MiAlias.StringContext):
@@ -417,7 +417,7 @@ class yaplVisitor(ParseTreeVisitor):
             self.visit(ctx.expr())
 
 
-            self.agregar_a_desarrollo(f"\n\n    FINISHING {ctx.ID().getText()}")
+            self.agregar_a_desarrollo(f"\n\n    FINISHING FUNCTION {ctx.ID().getText()}")
 
 
 
@@ -606,7 +606,7 @@ class yaplVisitor(ParseTreeVisitor):
                         scope           =   relative_scope
                     ).offset
 
-                    self.agregar_a_desarrollo(f"\n        {ind_formal.ID().getText()}\t\tEQUAL TO\tfp[{desplazamiento}]")
+                    self.agregar_a_desarrollo(f"\n      {ind_formal.TYPE().getText()}  {ind_formal.ID().getText()}\t\tEQUAL TO\tfp[{desplazamiento}]")
                     # self.agregar_a_desarrollo(f"\n        fp[{desplazamiento}] = {self.visit(ind_expr)}")
 
             # * Visitando expr dentro de IN

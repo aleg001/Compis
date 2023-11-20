@@ -1,4 +1,4 @@
-// Generated from /Users/alegomez/Documents/UVG/Cuarto Año/Segundo Semestre/Compis/Lab3/Lab3/antlr_files/yapl.g4 by ANTLR 4.13.1
+// Generated from c:/Users/charl/Desktop/S22023/Compiladores/Proyecto 3/C1/Compis/Proyecto3/antlr_files/yapl.g4 by ANTLR 4.13.1
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;

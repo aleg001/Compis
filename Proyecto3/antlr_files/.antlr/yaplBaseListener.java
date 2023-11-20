@@ -1,4 +1,4 @@
-// Generated from c:/Users/charl/Desktop/FINAL/Compis-version3/Compis-version3/antlr_files/yapl.g4 by ANTLR 4.13.1
+// Generated from c:/Users/charl/Desktop/S22023/Compiladores/Proyecto 3/C1/Compis/Proyecto3/antlr_files/yapl.g4 by ANTLR 4.13.1
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;

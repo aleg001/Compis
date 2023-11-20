@@ -5,7 +5,7 @@ from antlr_files.yaplParser import yaplParser
 from antlr_files.yaplListener import yaplListener
 from antlr4.error.ErrorListener import ErrorListener
 from Visitor_v2 import yaplVisitor
-from MIPS import *
+from MIPS_2 import *
 import tkinter as tk
 
 

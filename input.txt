@@ -1,17 +1,11 @@
-class Main inherits IO {
-    main() : IO {
-        {
-            io_out_int(add(3, 4));
-            io_out_string("\n");
-            io_out_int(divide(8, 2));
-        }
-    };
-
-    add(x : Int, y : Int) : Int {
-        x + y
-    };
-
-    divide(a : Int, b : Int) : Int {
-        a / b
-    };
-};
+   class Main inherits IO {
+      palabra: String <- "asdfasfd";
+      palabra2: String <- "asdfasfd";
+      palabra3: Int <- 1234;
+      main(): SELF_TYPE {
+      {
+         -- out_string("HOla que tal");
+         out_int(palabra3);
+      }
+      };
+   };

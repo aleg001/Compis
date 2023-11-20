@@ -1,0 +1,11 @@
+DECLARE CLASS Main
+
+    FUNCTION main
+
+
+        PUSHING "Hello, World.\n"
+        CALLING out_string POP 1 AS t0
+
+    FINISHING main
+
+FINISHING Main

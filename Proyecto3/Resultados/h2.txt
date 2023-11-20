@@ -1,0 +1,13 @@
+DECLARE CLASS Main
+    String b           EQUAL TO        fp[0]
+    fp[0]       =               "Hello, World.\n"
+
+    FUNCTION main
+
+
+        PUSHING fp[0]
+        CALLING out_string POP 1 AS t0
+
+    FINISHING main
+
+FINISHING Main
