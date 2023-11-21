@@ -1,11 +1,10 @@
-   class Main inherits IO {
-      palabra: String <- "asdfasfd";
-      palabra2: String <- "asdfasfd";
-      palabra3: Int <- 1234;
-      main(): SELF_TYPE {
-      {
-         -- out_string("HOla que tal");
-         out_int(palabra3);
-      }
-      };
-   };
+
+class Main inherits IO {
+    main() : SELF_TYPE {
+	{
+	    out_string((new Object).type_name().substr(3,5));
+	    out_string("\n");
+	    out_string((isvoid self).type_name().substr(0,2));
+	}
+    };
+};

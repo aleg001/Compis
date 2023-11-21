@@ -1,14 +1,5 @@
 .data
 
-	palabra: .asciiz "asdfasfd"
-
-
-	palabra2: .asciiz "asdfasfd"
-
-
-	palabra3: .word 1234
-
-
 .text
 
 # INIT class Main
@@ -22,10 +13,56 @@ Main:
 Main_main:
 
 
-        lw $t9, palabra3
+        li $t9, 3
+
+
+        li $t8, 5
+
+        jal Object
+        move $t2, $s7
+
+        move $t1, $t2
+        move $a0, $t9
+        move $a1, $t8
+        jal substr
+        
+
+        move $t9, $t0
 
         move $a0, $t9
-        jal out_int
+        jal out_string
+        
+
+        li $a0, 2
+        li $v0, 9
+        syscall
+        move $t9, $v0
+
+
+        li $t5, 10
+        sb $t5, 0($t9)
+
+        move $a0, $t9
+        jal out_string
+        
+
+        li $t9, 0
+
+
+        li $t8, 2
+
+        jal Main_type_name
+        move $t1, $s7
+
+        move $a0, $t9
+        move $a1, $t8
+        jal substr
+        
+
+        move $t9, $t0
+
+        move $a0, $t9
+        jal out_string
         
 
 	# Terminando programa
@@ -65,3 +102,38 @@ next:
 	addi $s0, $s0, 1
 	addi $t1, $t1, 1
 	j transfer
+
+Object:
+	li $a0, 7
+	li $v0, 9
+	syscall
+	move $t6, $v0
+        li $t5, 79
+        sb $t5, 0($t6)
+        li $t5, 98
+        sb $t5, 1($t6)
+        li $t5, 106
+        sb $t5, 2($t6)
+        li $t5, 101
+        sb $t5, 3($t6)
+        li $t5, 99
+        sb $t5, 4($t6)
+        li $t5, 116
+        sb $t5, 5($t6)
+	move $s7, $t6
+	jr $ra
+Main_type_name:
+	li $a0, 10
+	li $v0, 9
+	syscall
+	move $t6, $v0
+        li $t5, 77
+        sb $t5, 0($t6)
+        li $t5, 97
+        sb $t5, 1($t6)
+        li $t5, 105
+        sb $t5, 2($t6)
+        li $t5, 110
+        sb $t5, 3($t6)
+	move $s7, $t6
+	jr $ra

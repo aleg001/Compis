@@ -45,9 +45,9 @@ def parse_icr(icr):
             mips_output.append("# INIT class {}\n".format(words[-1]))
             mips_output.append("{}:\n".format(words[-1]))
 
-            if clase_actual == "Main":
-                mips_output.append(f"        jal Main_main")
-                mips_output.append(f"        ")
+            # if clase_actual == "Main":
+            #     mips_output.append(f"        jal Main_main")
+            #     mips_output.append(f"        ")
 
         # Procesa la definición de funciones.
         elif "String" in line and "EQUAL TO" in line:
@@ -66,9 +66,23 @@ def parse_icr(icr):
             # print(words[-1])
             declaraciones[str(words[-1])].append(words[1])
         elif "fp" in line and "=" in line:
-            declaraciones[words[0]].append(words[-1])
+
+            if 't' in words[-1] and len(words) == 3 and '"' not in line:
+                declaraciones[words[0]].append('0')
+                mips_output.append(f"\n\tsw ${words[-1]}, {declaraciones[words[0]][0] }")
+            if words[-1].isdigit() and len(words) == 3 and '"' not in line:
+                # declaraciones[words[0]].append('0')
+                declaraciones[words[0]].append(words[-1])
+            else:
+                inicio = line.find('"')
+                fin = line.rfind('"')
+                subcadena = '"'+line[inicio + 1:fin]+'"'
+                declaraciones[words[0]].append(subcadena)
             # pass
         elif "FUNCTION" in line and "FINISHING" not in line:
+            mips_output.append(f"        jal Main_main")
+            mips_output.append(f"        ")
+
             metodo_actual = words[-1]
             mips_output.append(f"# INIT METHOD {metodo_actual}\n")
             mips_output.append(f"{clase_actual}_{metodo_actual}:\n")
@@ -155,6 +169,25 @@ def parse_icr(icr):
                 mips_output.append(f"        jal {palabras[1]}")
                 mips_output.append(f"        ")
 
+        elif 't' in words[0] and '=' in line:
+            if words[2].isdigit() and words[4].isdigit():
+                if words[3] == '+':
+                    mips_output.append(f"\n\taddi ${words[0]}, $zero, {int(words[2])}")
+                    mips_output.append(f"\n\taddi ${words[0]}, ${words[0]}, {int(words[4])}")
+                if words[3] == '-':
+                    mips_output.append(f"\n\taddi ${words[0]}, $zero, {int(words[2])}")
+                    mips_output.append(f"\n\tsubi ${words[0]}, ${words[0]}, {int(words[4])}")
+            if 't' in words[2] and words[4].isdigit():
+                if words[3] == '+':
+                    mips_output.append(f"\n\taddi ${words[0]}, ${words[2]}, {int(words[4])}")
+                if words[3] == '-':
+                    mips_output.append(f"\n\tsubi ${words[0]}, ${words[2]}, {int(words[4])}")
+            if 't' in words[2] and 't' in words[4]:
+                if words[3] == '+':
+                    mips_output.append(f"\n\tadd ${words[0]}, ${words[2]},${words[4]}")
+                if words[3] == '-':
+                    mips_output.append(f"\n\tsub ${words[0]}, ${words[2]}, ${words[4]}")
+
         # Procesa la acción de empujar una cadena al stack.
         elif "PUSHING" in line:
 
@@ -224,6 +257,9 @@ def parse_icr(icr):
                     mips_output.append(f'        la $t{9-len(N_pushing)}, {declaraciones[words[-1]][0]}')
                     mips_output.append(f'')
                     # pass
+
+
+
 
             N_pushing.append(".")
 
