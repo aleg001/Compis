@@ -1,6 +1,6 @@
 class Factorial {
   	var: Int <- 0;
-  	
+
   	factorial(n: Int) : Int {
       {( let f : Int in
       	 if n=0 then f<-0 else
@@ -9,11 +9,11 @@ class Factorial {
          fi fi
        );}
     };
-  
+
   };
 
 class Fibonacci {
-  	
+
   	fibonacci(n: Int) : Int {
         {( let f : Int in
       	 if n=1 then f<-1 else
@@ -22,14 +22,14 @@ class Fibonacci {
          fi fi
        );}
      };
-  
+
   };
 
 class Main inherits IO {
     n: Int <- 10;
   	facto: Factorial;
   	fibo: Fibonacci;
-  
+
   	main() : SELF_TYPE {
 	{
 	    facto <- new Factorial;

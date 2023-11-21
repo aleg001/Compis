@@ -14,6 +14,8 @@ def parse_icr(icr):
 
     diccionario = {}
 
+    nuevos = []
+    existentes = []
     clase_actual = ""
     metodo_actual = ""
 
@@ -25,8 +27,27 @@ def parse_icr(icr):
     # Divide el ICR en líneas y las procesa una por una.
     lines = icr.strip().split("\n")
 
-    for line in lines:
+    lines_2 = []
 
+    minimalist  = False
+    for line in lines:
+        if minimalist == False:
+            partido = line.split(" ")
+
+            if 'DECLARE CLASS' in line and partido[-1] != 'Main':
+                existentes.append(partido[-1])
+            if 'DECLARE CLASS Main' in line:
+                lines_2.append(line)
+                minimalist = True
+
+        else:
+            lines_2.append(line)
+
+    print("-------------------------")
+
+    for line in lines_2:
+
+        print(line)
 
         # * Clase actual
 
@@ -65,7 +86,7 @@ def parse_icr(icr):
 
             # print(words[-1])
             declaraciones[str(words[-1])].append(words[1])
-        elif "fp" in line and "=" in line:
+        elif "fp" in line and "=" in line and 'Comparisson' not in line:
 
             if 't' in words[-1] and len(words) == 3 and '"' not in line:
                 declaraciones[words[0]].append('0')
@@ -73,7 +94,7 @@ def parse_icr(icr):
             if words[-1].isdigit() and len(words) == 3 and '"' not in line:
                 # declaraciones[words[0]].append('0')
                 declaraciones[words[0]].append(words[-1])
-            else:
+            elif len(words) == 3:
                 inicio = line.find('"')
                 fin = line.rfind('"')
                 subcadena = '"'+line[inicio + 1:fin]+'"'
@@ -82,6 +103,7 @@ def parse_icr(icr):
         elif "FUNCTION" in line and "FINISHING" not in line:
             mips_output.append(f"        jal Main_main")
             mips_output.append(f"        ")
+
 
             metodo_actual = words[-1]
             mips_output.append(f"# INIT METHOD {metodo_actual}\n")
@@ -100,9 +122,15 @@ def parse_icr(icr):
         #     mips_output.append(f"")
         elif "NEW" in line:
 
-            mips_output.append(f"        jal {words[-1]}")
-            mips_output.append(f"        move ${words[0]}, $s7")
-            mips_output.append(f"")
+
+            if words[-1] in existentes:
+                nuevos.append(agregando_para_substr(words[-1]))
+                mips_output.append(f"        jal {words[-1]}")
+                mips_output.append(f"        move ${words[0]}, $s7")
+                mips_output.append(f"")
+            else:
+                mips_output.append(f'\n\t# Terminando programa\n\tli $v0, 10\n\tsyscall\n')
+
         elif "CALLING" in line:
 
             # * Si se llama al metodo especial type_name
@@ -136,6 +164,7 @@ def parse_icr(icr):
                 else:
                     mips_output.append(f"        move ${words[-1]}, ${partes[0]}")
             elif "substr" in line:
+                extraccion = True
                 palabras = line.split()
 
                 partes = words[1].split(".")
@@ -169,7 +198,7 @@ def parse_icr(icr):
                 mips_output.append(f"        jal {palabras[1]}")
                 mips_output.append(f"        ")
 
-        elif 't' in words[0] and '=' in line:
+        elif 't' in words[0] and '=' in line and 'Comparisson' not in line:
             if words[2].isdigit() and words[4].isdigit():
                 if words[3] == '+':
                     mips_output.append(f"\n\taddi ${words[0]}, $zero, {int(words[2])}")
@@ -274,6 +303,11 @@ def parse_icr(icr):
     # * Funcion de substr, parametros t1 palabra, a0 inicio, a1 fin
     mips_output.append("\nsubstr:\n\tmove $s1, $a0\n\tli $a0, 20\n\tli $v0, 9\n\tsyscall\n\tmove $t0, $v0\n\tli $s0, 0\n\ntransfer:\n\tblt $s0, $s1, next\n\tlb $s2, 0($t1)\n\tsb $s2, 0($v0)\n\taddi $v0, $v0, 1\n\tbeq $s0, $a1, return\n\nnext:\n\taddi $s0, $s0, 1\n\taddi $t1, $t1, 1\n\tj transfer\n")
 
+
+    for lista in nuevos:
+        for linea in lista:
+            mips_output.append(linea)
+
     if extraccion:
 
         # * Clase OBJECT que siempre tiene
@@ -286,11 +320,21 @@ def parse_icr(icr):
             mips_output.append(f'        sb $t5, {indice}($t6)')
 
         mips_output.append("\tmove $s7, $t6\n\tjr $ra")
+        # * Clase IO que siempre tiene
+        mips_output.append("IO:\n\tli $a0, 7\n\tli $v0, 9\n\tsyscall\n\tmove $t6, $v0")
+
+        palabra_especial = "IO"
+
+        for indice, caracter in enumerate(palabra_especial):
+            mips_output.append(f'        li $t5, {ord(caracter)}')
+            mips_output.append(f'        sb $t5, {indice}($t6)')
+
+        mips_output.append("\tmove $s7, $t6\n\tjr $ra")
 
         # * Clase Main_type_name que siempre tiene
         mips_output.append("Main_type_name:\n\tli $a0, 10\n\tli $v0, 9\n\tsyscall\n\tmove $t6, $v0")
 
-        palabra_especial = "Main"
+        palabra_especial = "False"
 
         for indice, caracter in enumerate(palabra_especial):
             mips_output.append(f'        li $t5, {ord(caracter)}')
@@ -299,6 +343,22 @@ def parse_icr(icr):
         mips_output.append("\tmove $s7, $t6\n\tjr $ra")
     return mips_output
 
+
+def agregando_para_substr (word):
+
+    mips_output = []
+    # * Clase IO que siempre tiene
+    mips_output.append(f"{word}:\n\tli $a0, 7\n\tli $v0, 9\n\tsyscall\n\tmove $t6, $v0")
+
+    palabra_especial = word
+
+    for indice, caracter in enumerate(palabra_especial):
+        mips_output.append(f'        li $t5, {ord(caracter)}')
+        mips_output.append(f'        sb $t5, {indice}($t6)')
+
+    mips_output.append("\tmove $s7, $t6\n\tjr $ra")
+
+    return mips_output
 
 def declare_class(name):
     return f"# INIT class {name}\n"
@@ -394,10 +454,15 @@ def generate_mips(icr):
 
     for clave, valor in declaraciones.items():
 
-        if valor[1].isdigit():
-            mips_output.append(f'\n\t{valor[0]}: .word {valor[1]}\n')
-        else:
-            mips_output.append(f'\n\t{valor[0]}: .asciiz {valor[1]}\n')
+        print(clave)
+        print(valor)
+
+        if len(valor) > 2:
+
+            if valor[1].isdigit():
+                mips_output.append(f'\n\t{valor[0]}: .word {valor[1]}\n')
+            else:
+                mips_output.append(f'\n\t{valor[0]}: .asciiz {valor[1]}\n')
 
     # print("---------------------------")
     # print(declaraciones)
